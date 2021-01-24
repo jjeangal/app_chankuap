@@ -59,3 +59,9 @@ app.*.map.json
 /build/*
 /build/
 /build
+
+# remove assets
+/ios/Runner/
+/android/app/src/main/res/
+
+
