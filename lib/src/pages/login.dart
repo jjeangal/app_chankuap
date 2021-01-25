@@ -250,8 +250,6 @@ class _LoginScreenState extends State<LoginScreen> {
       var uriResponse = await client.post(url+endpoint,
           body: {'username': _email, 'pwd': _password});
 
-      print(await uriResponse.body);
-
       if (uriResponse.statusCode == 202) {
         Route route = MaterialPageRoute(builder: (context) => MyHomePage());
         Navigator.pushReplacement(context, route);

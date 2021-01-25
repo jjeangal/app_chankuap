@@ -25,7 +25,7 @@ class EntradaTrans {
         productor = json['productor'],
         p_code = json['p_code'],
         transporte = json['transporte'],
-        lotes = json['products'].map((e) => Producto.fromJson(e)).toList();
+        lotes = json['products'].map((e) => Producto.fromJson(e)).toList().cast<Producto>();
 
   Map<String, dynamic> toJson() => {
     "date": fecha_uno,
@@ -52,7 +52,7 @@ class SalidaTrans {
         quien = json['username'],
         transporte = json['transporte'],
         cliente = json['cliente'],
-        lotes = json['products'].map((e) => Producto.fromJson(e)).toList();
+        lotes = json['products'].map((e) => Producto.fromJson(e)).toList().cast<Producto>();
 
   Map<String, dynamic> toJson() => {
     "date": fecha_uno,
@@ -64,7 +64,7 @@ class SalidaTrans {
 
 class Producto {
   final int id;
-  final int cantidad;
+  final double cantidad;
   final int unidad;
   final int precio;
   final String organico;
@@ -84,7 +84,7 @@ class Producto {
       id = json['PRODUCT_ID'],
       comb_id = json['COMB_ID'],
       name = json['name'],
-      cantidad = json['quantity'],
+      cantidad = double.parse(json['quantity'].toString()),
       unidad = json['unit'],
       precio = json['price'],
       organico = json['organico'],
@@ -197,17 +197,21 @@ class SalidaOverview {
   List<Map<String, dynamic>> ListSalidas;
 
   SalidaOverview.fromJson(Map<String, dynamic> json) :
-        trans_id = json['TRANS_ID'],
+        trans_id = json['TRANS_OUT_ID'],
         fecha = json['date'],
         username = json['username'],
         cliente = json['cliente'];
 
   Map<String, dynamic> toJson() => {
-    "TRANS_ID": trans_id,
+    "TRANS_OUT_ID": trans_id,
     "date": fecha,
     "username": username,
     "PROVIDER_ID": cliente
   };
+
+  getId() {
+    return this.trans_id;
+  }
 
   dynamic toJsonList(List<SalidaOverview> listToParse){
 

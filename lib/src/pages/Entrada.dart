@@ -19,11 +19,15 @@ class Entrada extends StatefulWidget {
 
 class _EntradaState extends State<Entrada> {
 
-  final List<EntradaOverview> entradas = [];
-  EntradaTrans tempEntrada;
+  List<EntradaOverview> entradas = [];
+  EntradaOverview trans;
 
   void initState() {
-    _getEntradas();
+    _getEntradas().then((value) => {
+      setState(() {
+        this.entradas = value;
+      })
+    });
     super.initState();
   }
 
@@ -85,17 +89,20 @@ class _EntradaState extends State<Entrada> {
                   child: TransactionDeleteButton())
             ])),
         onTap: () {
-          _getEntrada(entradas[index].trans_id);
+          _getEntrada(entradas[index].trans_id).then((value) => {
+            setState(() {
+              this.trans = value;
+            })
+          });
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => new EntradaForm(trans: new EntradaTrans("1", "5", 5,
-                    "6", "9", 9, "Achuar", "Carro", []))),
+                builder: (context) => new EntradaForm(trans: trans)),
           );
         });
   }
 
-  _getEntrada(int id) async {
+  Future<EntradaOverview> _getEntrada(int id) async {
     var client = http.Client();
     var url = 'https://wakerakka.herokuapp.com/';
     var endpoint = 'transactions/in/${id}';
@@ -107,9 +114,7 @@ class _EntradaState extends State<Entrada> {
       if (uriResponse.statusCode == 200) {
         Map<String, dynamic> body = json.decode(uriResponse.body);
 
-        print(body);
-
-        print(EntradaTrans.fromJson(body));
+        return EntradaOverview.fromJson(body);
 
       } else {
         throw Exception('Failed to load album');
@@ -119,7 +124,7 @@ class _EntradaState extends State<Entrada> {
     }
   }
 
-  _getEntradas() async {
+  Future<List<EntradaOverview>>_getEntradas() async {
     var client = http.Client();
     var url = 'https://wakerakka.herokuapp.com/';
     var endpoint = 'transactions/in/';
@@ -127,14 +132,15 @@ class _EntradaState extends State<Entrada> {
       var uriResponse = await client.get(url+endpoint);
       //Future<http.Response> response = http.get(url+endpoint);
 
+      List<EntradaOverview> entradas = [];
+
       if (uriResponse.statusCode == 200) {
         List<dynamic> body = jsonDecode(uriResponse.body);
-        print(body.length);
 
         for (int i = 0; i < body.length; i++) {
-          this.entradas.add(EntradaOverview.fromJson(body[i]));
+          entradas.add(EntradaOverview.fromJson(body[i]));
         }
-        setState(() {});
+        return entradas;
       } else {
         throw Exception('Failed to load album');
       }

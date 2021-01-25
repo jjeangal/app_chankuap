@@ -28,7 +28,7 @@ class _StepperPageState extends State<StepperPage> {
 
   int id;
   String name = "";
-  int cantidad;
+  double cantidad;
   int unidad = 0;
   String precio = "";
   String organico = "";
@@ -151,7 +151,7 @@ class _StepperPageState extends State<StepperPage> {
                     keyboardType: TextInputType.number,
                     inputFormatters: [LengthLimitingTextInputFormatter(15)],
                     onSaved: (canti) {
-                      cantidad = int.parse(canti);
+                      cantidad = double.parse(canti.toString());
                     },
                     autofocus: true,
                     focusNode: CantidadFocusNode,

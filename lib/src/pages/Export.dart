@@ -214,8 +214,8 @@ class _ExportState extends State<Export> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => new EntradaForm(trans: new EntradaTrans("1", "5", 5,
-                    "6", "9", 9, "Achuar", "Carro", []))),
+                builder: (context) => new EntradaForm(trans:
+                new EntradaOverview(1, "", 2, 2))),
           );
         });
   }

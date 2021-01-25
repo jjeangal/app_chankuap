@@ -18,11 +18,17 @@ class Salida extends StatefulWidget {
 
 class _Salida extends State<Salida> {
 
-  final List<SalidaOverview> salidas = [];
+  List<SalidaOverview> salidas = [];
+  SalidaOverview trans;
 
   @override
   void initState() {
-    _getSalidas();
+    _getSalidas().then((result) {
+        setState(() {
+          this.salidas = result;
+        });
+      }
+    );
     super.initState();
   }
 
@@ -78,17 +84,23 @@ class _Salida extends State<Salida> {
           ]),
         ),
         onTap: () {
-          _getSalida(index);
+          _getSalida(this.salidas[index].getId()).then((result) {
+            setState(() {
+              this.trans = result;
+              print(trans.fecha);
+              print(trans.cliente);
+              print(trans.trans_id);
+            });
+          });
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => new SalidaForm(trans: new SalidaTrans(
-              "Cliente", 3, "Carro", "", "", []
-            ))),
+            MaterialPageRoute(builder: (context) => new SalidaForm(trans: trans)),
           );
+          setState(() {});
         });
   }
 
-  _getSalida(int id) async {
+  Future<SalidaOverview> _getSalida(int id) async {
     var client = http.Client();
     var url = 'https://wakerakka.herokuapp.com/';
     var endpoint = 'transactions/out/${id}';
@@ -100,10 +112,7 @@ class _Salida extends State<Salida> {
       if (uriResponse.statusCode == 200) {
         Map<String, dynamic> body = json.decode(uriResponse.body);
 
-        print(body);
-
-        print(SalidaTrans.fromJson(body));
-
+        return SalidaOverview.fromJson(body);
       } else {
         throw Exception('Failed to load album');
       }
@@ -112,21 +121,24 @@ class _Salida extends State<Salida> {
     }
   }
 
-  _getSalidas() async {
+  Future<List<SalidaOverview>>  _getSalidas() async {
     var client = http.Client();
     var url = 'https://wakerakka.herokuapp.com/';
     var endpoint = 'transactions/out/';
     try {
       var uriResponse = await client.get(url+endpoint);
       //Future<http.Response> response = http.get(url+endpoint);
+      List<SalidaOverview> salidas = [];
 
       if (uriResponse.statusCode == 200) {
         List<dynamic> body = jsonDecode(uriResponse.body);
 
         for (int i = 0; i < body.length; i++) {
-          this.salidas.add(SalidaOverview.fromJson(body[i]));
+          salidas.add(SalidaOverview.fromJson(body[i]));
         }
-        setState(() {});
+
+        return salidas;
+
       } else {
         // If the server did not return a 200 OK response,
         // then throw an exception.

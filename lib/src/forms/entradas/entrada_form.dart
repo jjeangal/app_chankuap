@@ -14,7 +14,7 @@ import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class EntradaForm extends StatefulWidget{
   final int id;
-  final EntradaTrans trans;
+  final EntradaOverview trans;
 
   EntradaForm({Key key, this.id, this.trans}) : super(key: key);
 
@@ -24,8 +24,6 @@ class EntradaForm extends StatefulWidget{
 
 class _EntradaFormState extends State<EntradaForm> {
 
-  EntradaTrans trans;
-
   final _fKey = GlobalKey<FormState>();
 
   String _usario = "Isaac";
@@ -34,7 +32,7 @@ class _EntradaFormState extends State<EntradaForm> {
   String _productorName = "";
   String _codigoProductor = "";
   String _cedula = "";
-  String _comunidad = "";
+  String _comunidad = "Shuar";
   String _transporte = "Carro";
 
   final clienteFocusNode = FocusNode();
@@ -48,10 +46,9 @@ class _EntradaFormState extends State<EntradaForm> {
 
   @override
   void initState() {
-    trans = this.widget.trans;
-    super.initState();
     stepperPage.productos = productos;
     productList.productos = productos;
+    super.initState();
   }
 
   @override
@@ -81,8 +78,8 @@ class _EntradaFormState extends State<EntradaForm> {
                       onDateSaved: (value) => {
                         _fechaUno = value.toString()
                       },
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2021, 1, 1),
+                      initialDate: DateTime.parse(widget.trans.fecha),
+                      firstDate: DateTime(2020, 1, 1),
                       lastDate:  DateTime(2060, 1, 01)
                     ),
                     SizedBox(height: 10),
@@ -143,8 +140,14 @@ class _EntradaFormState extends State<EntradaForm> {
                       onSaved: (value) {
                         _codigoProductor = value;
                       },
-                      initialValue: this.widget.trans.p_code,
+                      initialValue: "Codigo ",
                       autofocus: true,
+                      validator: (codigo) {
+                        if (codigo.isEmpty) {
+                          return 'Necesitas un codigo';
+                        }
+                        return null;
+                      },
                       focusNode: CodigoFocusNode,
                       textInputAction: TextInputAction.next,
                       onTap: () {
@@ -173,7 +176,7 @@ class _EntradaFormState extends State<EntradaForm> {
                     SizedBox(height: 10),
                     FormBuilderDropdown(
                         decoration: const InputDecoration(labelText: 'Comunidad'),
-                        initialValue: this.widget.trans.comunidad,
+                        initialValue: _comunidad,
                         attribute: 'comunidad',
                         onSaved: (value) => {
                           if(value == 'Shuar') _comunidad = "SH",
@@ -189,7 +192,7 @@ class _EntradaFormState extends State<EntradaForm> {
                         )).toList()),
                     SizedBox(height: 10),
                     FormBuilderDropdown(
-                        initialValue: widget.trans.transporte,
+                        initialValue: "Carro",
                         attribute: 'mala',
                         onSaved: (value) {
                           _transporte = value;
@@ -235,7 +238,6 @@ class _EntradaFormState extends State<EntradaForm> {
           confirmationDialog(context, "Estas seguro ?",
               title: "Confirmacion",
               positiveText: "Registrar", positiveAction: () {
-                //empty values
                 //push entrada
                 _validateInputs();
           });

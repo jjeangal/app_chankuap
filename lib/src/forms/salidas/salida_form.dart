@@ -12,7 +12,7 @@ import '../product_list_form.dart';
 class SalidaForm extends StatefulWidget{
   SalidaForm({Key key, this.id, this.trans}) : super(key: key);
 
-  final SalidaTrans trans;
+  final SalidaOverview trans;
 
   final int id;
 
@@ -33,15 +33,15 @@ class _SalidaFormState extends State<SalidaForm> {
   final nameFocusNode = FocusNode();
   final stepperPage = StepperPage();
   final productList = ProductListForm();
-  SalidaTrans trans;
+  SalidaOverview trans;
 
   final List<Producto> productos = [];
 
   @override
   void initState() {
+    this.trans = widget.trans;
     stepperPage.productos = productos;
     productList.productos = productos;
-    this.trans = widget.trans;
     super.initState();
   }
 
@@ -67,10 +67,11 @@ class _SalidaFormState extends State<SalidaForm> {
               ),
               SizedBox(height: 10),
               InputDatePickerFormField(
+                initialDate: DateTime.parse(widget.trans.fecha),
                   onDateSaved: (value) => {
                     _fechaUno = value.toString()
                   },
-                  firstDate: DateTime(2021, 1, 1),
+                  firstDate: DateTime(2020, 1, 1),
                   lastDate:  DateTime(2060, 1, 01)
               ),
               SizedBox(height: 10),
@@ -95,7 +96,7 @@ class _SalidaFormState extends State<SalidaForm> {
                       .toList()),
               SizedBox(height: 10),
               TextFormField(
-                initialValue: this.trans.cliente,
+                initialValue: this.widget.trans.cliente,
                 decoration: const InputDecoration(
                   labelText: 'Cliente',
                 ),
@@ -103,9 +104,6 @@ class _SalidaFormState extends State<SalidaForm> {
                 validator: (userName) {
                   if (userName.isEmpty) {
                     return 'Name is required';
-                  }
-                  if (userName.length < 3) {
-                    return 'Name is too short';
                   }
                   return null;
                 },
@@ -122,7 +120,7 @@ class _SalidaFormState extends State<SalidaForm> {
               ),
               SizedBox(height: 10),
               FormBuilderDropdown(
-                initialValue: this.widget.trans.transporte,
+                initialValue: "Carro",
                   onSaved: (value) => _transporte = value,
                   attribute: 'medio',
                   decoration: const InputDecoration(

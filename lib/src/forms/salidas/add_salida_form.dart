@@ -41,7 +41,7 @@ class _AddSalidaFormState extends State<AddSalidaForm> {
   @override
   void initState() {
     super.initState();
-    productList = new ProductListForm(notifyParent: refresh);
+    productList = new ProductListForm();
     stepperPage.productos = productos;
     productList.productos = productos;
   }
