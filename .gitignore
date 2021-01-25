@@ -64,4 +64,5 @@ app.*.map.json
 /ios/Runner/
 /android/app/src/main/res/
 
-
+#remove web version
+/web/

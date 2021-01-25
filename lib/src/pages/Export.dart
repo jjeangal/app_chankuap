@@ -1,10 +1,12 @@
-
 import 'package:app_chankuap/src/Widgets/data_object.dart';
 import 'package:app_chankuap/src/app_bars/export_app_bar.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import '../forms/entradas/entrada_form.dart';
 
@@ -22,7 +24,7 @@ class _ExportState extends State<Export> {
 
   String fecha_una;
   String fecha_dos;
-  String tipo; // 1 -> entrada, 2 -> salida
+  int tipo; // 1 -> entrada, 2 -> salida
 
 
   changeTitle(String title) {
@@ -37,6 +39,12 @@ class _ExportState extends State<Export> {
 
   double screenHeight(BuildContext context) {
     return screenSize(context).height - 110;
+  }
+
+  @override
+  void initState() {
+    this.tipo = 1;
+    super.initState();
   }
 
   @override
@@ -225,12 +233,32 @@ class _ExportState extends State<Export> {
 //    If all data are correct then save data to out variables
       _formKey.currentState.save();
       print("fetch all transaction in date range");
+
       //create get request with fecha range + entrada/salida
       //show entradas/salidas
     }
   }
 
-  _export() {
-    print("here export data");
+  _export() async {
+    var client = http.Client();
+    String url = 'https://wakerakka.herokuapp.com/';
+    String endpoint = 'export/';
+    try {
+      String request;
+      if (this.tipo == 1) request = ('$url$endpoint' + 'in');
+      if (this.tipo == 2) request = ('$url$endpoint' + 'out');
+      else print(this.tipo);
+
+      String requestUrl = request + '?in_date=${this.fecha_una}&out_date=${this.fecha_dos}';
+      var uriResponse = await client.get(requestUrl);
+
+      if (uriResponse.statusCode == 200) {
+        print("export worked");
+      } else {
+        throw Exception('Failed to load album');
+      }
+    } finally {
+      client.close();
+    }
   }
 }
