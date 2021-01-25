@@ -148,22 +148,22 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                       },
                     ),
                     SizedBox(height: 10),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Ciudad / Comunidad',
-                      ),
-                      inputFormatters: [LengthLimitingTextInputFormatter(30)],
-                      onSaved: (comunidad) {
-                        _comunidad = comunidad;
-                      },
-                      autofocus: true,
-                      focusNode: DondeFocusNode,
-                      textInputAction: TextInputAction.next,
-                      onTap: () {
-                        FocusScope.of(context).unfocus();
-                        FocusScope.of(context).requestFocus(DondeFocusNode);
-                      },
-                    ),
+                    FormBuilderDropdown(
+                        decoration: const InputDecoration(labelText: 'Comunidad'),
+                        initialValue: "Shuar",
+                        attribute: 'comunidad',
+                        onSaved: (value) => {
+                          if(value == 'Shuar') _comunidad = "SH",
+                          if(value == 'Achuar') _comunidad = "ACH"
+                        },
+                        items: [
+                          'Shuar',
+                          'Achuar'
+                        ].map((comu) => DropdownMenuItem(
+                            value: comu,
+                            child: Text("$comu",
+                                textAlign: TextAlign.left)
+                        )).toList()),
                     SizedBox(height: 10),
                     FormBuilderDropdown(
                       onSaved: (value) => _transporte = value,

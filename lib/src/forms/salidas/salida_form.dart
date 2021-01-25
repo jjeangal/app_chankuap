@@ -10,7 +10,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../product_list_form.dart';
 
 class SalidaForm extends StatefulWidget{
-  SalidaForm({Key key, this.id}) : super(key: key);
+  SalidaForm({Key key, this.id, this.trans}) : super(key: key);
+
+  final SalidaTrans trans;
 
   final int id;
 
@@ -26,12 +28,12 @@ class _SalidaFormState extends State<SalidaForm> {
   String _fechaUno = "";
   String _fechaDos = "";
   String _cliente = "";
-  String _transporte = "Caro";
-  final List<String> medios = ['Caro', 'Avion'];
+  String _transporte = "Carro";
 
   final nameFocusNode = FocusNode();
   final stepperPage = StepperPage();
   final productList = ProductListForm();
+  SalidaTrans trans;
 
   final List<Producto> productos = [];
 
@@ -39,6 +41,7 @@ class _SalidaFormState extends State<SalidaForm> {
   void initState() {
     stepperPage.productos = productos;
     productList.productos = productos;
+    this.trans = widget.trans;
     super.initState();
   }
 
@@ -83,7 +86,7 @@ class _SalidaFormState extends State<SalidaForm> {
               FormBuilderDropdown(
                 onSaved: (value) => _usario = value,
                   decoration: const InputDecoration(labelText: 'Quien'),
-                  initialValue: _usario,
+                  initialValue: 'Isaac',
                   attribute: 'quien',
                   items: ['Isaac', 'Yollanda', 'Nube', 'Veronica', 'Anita']
                       .map((quien) => DropdownMenuItem(
@@ -92,7 +95,7 @@ class _SalidaFormState extends State<SalidaForm> {
                       .toList()),
               SizedBox(height: 10),
               TextFormField(
-                initialValue: _cliente,
+                initialValue: this.trans.cliente,
                 decoration: const InputDecoration(
                   labelText: 'Cliente',
                 ),
@@ -119,13 +122,13 @@ class _SalidaFormState extends State<SalidaForm> {
               ),
               SizedBox(height: 10),
               FormBuilderDropdown(
-                initialValue: _transporte,
+                initialValue: this.widget.trans.transporte,
                   onSaved: (value) => _transporte = value,
                   attribute: 'medio',
                   decoration: const InputDecoration(
                     labelText: 'Medio de Transporte',
                   ),
-                  items: medios.map((medio) => DropdownMenuItem(
+                  items: ['Carro', 'Avion'].map((medio) => DropdownMenuItem(
                           value: medio,
                           child: Text("$medio", textAlign: TextAlign.center)))
                       .toList()),
@@ -179,7 +182,6 @@ class _SalidaFormState extends State<SalidaForm> {
     if (_fbkey.currentState.validate()) {
 //    If all data are correct then save data to out variables
       _fbkey.currentState.save();
-      print(_transporte +" " + _cliente + " " + _usario + " " + _fechaUno);
       Navigator.pop(context);
     }
   }

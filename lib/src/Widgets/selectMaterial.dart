@@ -28,7 +28,7 @@ class _StepperPageState extends State<StepperPage> {
 
   int id;
   String name = "";
-  String cantidad = "";
+  int cantidad;
   int unidad = 0;
   String precio = "";
   String organico = "";
@@ -151,7 +151,7 @@ class _StepperPageState extends State<StepperPage> {
                     keyboardType: TextInputType.number,
                     inputFormatters: [LengthLimitingTextInputFormatter(15)],
                     onSaved: (canti) {
-                      cantidad = canti;
+                      cantidad = int.parse(canti);
                     },
                     autofocus: true,
                     focusNode: CantidadFocusNode,
@@ -214,9 +214,8 @@ class _StepperPageState extends State<StepperPage> {
       _formKey.currentState.save();
 
       try {
-        var cant = int.parse(cantidad);
         var price = int.parse(precio);
-        widget.productos.add(new Producto(1, name, cant, unidad,
+        widget.productos.add(new Producto(1, name, cantidad, unidad,
             price, organico, comunidad));
         Navigator.pop(context);
       } on FormatException {

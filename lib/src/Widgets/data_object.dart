@@ -11,7 +11,6 @@ class EntradaTrans {
   final int ID;
   final String comunidad;
   final String transporte;
-
   final List<Producto> lotes;
 
   EntradaTrans(this.fecha_uno, this.fecha_dos, this.quien, this.productor,
@@ -26,15 +25,7 @@ class EntradaTrans {
         productor = json['productor'],
         p_code = json['p_code'],
         transporte = json['transporte'],
-        lotes = json['products'].toJsonList;
-
-  getCode() {
-    return this.p_code;
-  }
-
-  getLotes() {
-    return this.lotes;
-  }
+        lotes = json['products'].map((e) => Producto.fromJson(e)).toList();
 
   Map<String, dynamic> toJson() => {
     "date": fecha_uno,
@@ -61,7 +52,7 @@ class SalidaTrans {
         quien = json['username'],
         transporte = json['transporte'],
         cliente = json['cliente'],
-        lotes = json['products'].toJsonList;
+        lotes = json['products'].map((e) => Producto.fromJson(e)).toList();
 
   Map<String, dynamic> toJson() => {
     "date": fecha_uno,
@@ -73,13 +64,13 @@ class SalidaTrans {
 
 class Producto {
   final int id;
-  final String name;
   final int cantidad;
   final int unidad;
   final int precio;
   final String organico;
   final String comunidad;
   final String comb_id;
+  final String name;
   final String bodega;
 
   List<Map<String, dynamic>> ListProducts;
@@ -92,10 +83,10 @@ class Producto {
   Producto.fromJson(Map<String, dynamic> json) :
       id = json['PRODUCT_ID'],
       comb_id = json['COMB_ID'],
+      name = json['name'],
       cantidad = json['quantity'],
       unidad = json['unit'],
       precio = json['price'],
-      name = json['name'],
       organico = json['organico'],
       comunidad = json['comunidad'],
       bodega = json['bodega'];
@@ -118,9 +109,7 @@ class Producto {
     for(Producto product in listToParse){
       ListProducts.add(product.toJson());
     }
-    print(ListProducts);
     return ListProducts;
-
   }
 
   getNumeroLote() {
@@ -189,7 +178,7 @@ class ListSalidaOverviews {
   final List<SalidaOverview> ListSalidas;
 
   ListSalidaOverviews.fromJson(Map<String, dynamic> json) :
-      ListSalidas = json['overviews'].toJsonList;
+      ListSalidas = json['overviews'];
 
   Map<String, dynamic> toJson() => {
       "overviews": ListSalidas.map((e) => e.toJson()).toList(),

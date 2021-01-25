@@ -20,8 +20,6 @@ class _Salida extends State<Salida> {
 
   final List<SalidaOverview> salidas = [];
 
-  final SalidaForm salida_form = SalidaForm();
-
   @override
   void initState() {
     _getSalidas();
@@ -80,11 +78,38 @@ class _Salida extends State<Salida> {
           ]),
         ),
         onTap: () {
+          _getSalida(index);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => salida_form),
+            MaterialPageRoute(builder: (context) => new SalidaForm(trans: new SalidaTrans(
+              "Cliente", 3, "Carro", "", "", []
+            ))),
           );
         });
+  }
+
+  _getSalida(int id) async {
+    var client = http.Client();
+    var url = 'https://wakerakka.herokuapp.com/';
+    var endpoint = 'transactions/out/${id}';
+
+    try {
+      var uriResponse = await client.get(url + endpoint);
+      print(endpoint);
+
+      if (uriResponse.statusCode == 200) {
+        Map<String, dynamic> body = json.decode(uriResponse.body);
+
+        print(body);
+
+        print(SalidaTrans.fromJson(body));
+
+      } else {
+        throw Exception('Failed to load album');
+      }
+    } finally {
+      client.close();
+    }
   }
 
   _getSalidas() async {

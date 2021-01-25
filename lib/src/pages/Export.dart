@@ -1,4 +1,5 @@
 
+import 'package:app_chankuap/src/Widgets/data_object.dart';
 import 'package:app_chankuap/src/app_bars/export_app_bar.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,9 +24,6 @@ class _ExportState extends State<Export> {
   String fecha_dos;
   String tipo; // 1 -> entrada, 2 -> salida
 
-  // Entrada or
-  // Salida
-  // + fecha range as values and data to put in http request
 
   changeTitle(String title) {
     setState(() {
@@ -50,18 +48,24 @@ class _ExportState extends State<Export> {
           child: ExportAppBar(_title),
         ),
         body: Container(
+          constraints: BoxConstraints(
+            maxHeight: screenHeight(context)
+          ),
           color: Color(0xffEFEFEF),
           child: Column(
             children: [
               Container(
+                height: screenHeight(context) * 0.16,
                 color: Colors.white,
                 child: Form(
                   key: _formKey,
                   child: Column(
                     children: [
                       Container(
+                        constraints: BoxConstraints(
+                          maxHeight: screenHeight(context) * 0.08,
+                        ),
                         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        height: 60,
                         child: Row(
                           children: [
                             Expanded(
@@ -84,7 +88,9 @@ class _ExportState extends State<Export> {
                         )
                       ),
                       Container(
-                        height: 50,
+                        constraints: BoxConstraints(
+                          maxHeight: screenHeight(context) * 0.08,
+                        ),
                         child: Row(
                           children: [
                             Expanded(
@@ -124,7 +130,7 @@ class _ExportState extends State<Export> {
                 )
               ),
               Container(
-                height: screenHeight(context) * 0.74,
+                height: screenHeight(context) * 0.68,
                 width: screenSize(context).width,
                 child: ListView.builder(
                     itemCount: 5,
@@ -134,7 +140,7 @@ class _ExportState extends State<Export> {
                         _buildListItem(context, index)),
               ),
               Container(
-                height: screenHeight(context) * 0.1,
+                height: screenHeight(context) * 0.12,
                 width: screenSize(context).width,
                 child: Align(
                     alignment: Alignment.center,
@@ -208,7 +214,8 @@ class _ExportState extends State<Export> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => entrada_form),
+                builder: (context) => new EntradaForm(trans: new EntradaTrans("1", "5", 5,
+                    "6", "9", 9, "Achuar", "Carro", []))),
           );
         });
   }
@@ -218,9 +225,6 @@ class _ExportState extends State<Export> {
 //    If all data are correct then save data to out variables
       _formKey.currentState.save();
       print("fetch all transaction in date range");
-      print(fecha_una);
-      print(fecha_dos);
-      print(tipo);
       //create get request with fecha range + entrada/salida
       //show entradas/salidas
     }

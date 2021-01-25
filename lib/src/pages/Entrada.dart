@@ -20,8 +20,7 @@ class Entrada extends StatefulWidget {
 class _EntradaState extends State<Entrada> {
 
   final List<EntradaOverview> entradas = [];
-
-  final EntradaForm entrada_form = EntradaForm(id: 1);
+  EntradaTrans tempEntrada;
 
   void initState() {
     _getEntradas();
@@ -86,38 +85,61 @@ class _EntradaState extends State<Entrada> {
                   child: TransactionDeleteButton())
             ])),
         onTap: () {
-          _getEntradas();
+          _getEntrada(entradas[index].trans_id);
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => entrada_form),
+                builder: (context) => new EntradaForm(trans: new EntradaTrans("1", "5", 5,
+                    "6", "9", 9, "Achuar", "Carro", []))),
           );
         });
   }
 
-  _getEntradas() async {
-      var client = http.Client();
-      var url = 'https://wakerakka.herokuapp.com/';
-      var endpoint = 'transactions/in/';
-      try {
-        var uriResponse = await client.get(url+endpoint);
-        //Future<http.Response> response = http.get(url+endpoint);
+  _getEntrada(int id) async {
+    var client = http.Client();
+    var url = 'https://wakerakka.herokuapp.com/';
+    var endpoint = 'transactions/in/${id}';
 
-        if (uriResponse.statusCode == 200) {
-          List<dynamic> body = jsonDecode(uriResponse.body);
-          print(body.length);
+    try {
+      var uriResponse = await client.get(url + endpoint);
+      print(endpoint);
 
-          for (int i = 0; i < body.length; i++) {
-            this.entradas.add(EntradaOverview.fromJson(body[i]));
-          }
-          setState(() {});
-        } else {
-          // If the server did not return a 200 OK response,
-          // then throw an exception.
-          throw Exception('Failed to load album');
-        }
-      } finally {
-        client.close();
+      if (uriResponse.statusCode == 200) {
+        Map<String, dynamic> body = json.decode(uriResponse.body);
+
+        print(body);
+
+        print(EntradaTrans.fromJson(body));
+
+      } else {
+        throw Exception('Failed to load album');
       }
+    } finally {
+      client.close();
+    }
+  }
+
+  _getEntradas() async {
+    var client = http.Client();
+    var url = 'https://wakerakka.herokuapp.com/';
+    var endpoint = 'transactions/in/';
+    try {
+      var uriResponse = await client.get(url+endpoint);
+      //Future<http.Response> response = http.get(url+endpoint);
+
+      if (uriResponse.statusCode == 200) {
+        List<dynamic> body = jsonDecode(uriResponse.body);
+        print(body.length);
+
+        for (int i = 0; i < body.length; i++) {
+          this.entradas.add(EntradaOverview.fromJson(body[i]));
+        }
+        setState(() {});
+      } else {
+        throw Exception('Failed to load album');
+      }
+    } finally {
+      client.close();
+    }
   }
 }

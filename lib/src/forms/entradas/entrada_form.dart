@@ -8,22 +8,24 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import 'package:http/http.dart' as http;
-
 import '../product_list_form.dart';
 
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class EntradaForm extends StatefulWidget{
-  EntradaForm({Key key, this.id}) : super(key: key);
-
   final int id;
+  final EntradaTrans trans;
+
+  EntradaForm({Key key, this.id, this.trans}) : super(key: key);
 
   @override
   _EntradaFormState createState() => _EntradaFormState();
 }
 
 class _EntradaFormState extends State<EntradaForm> {
+
+  EntradaTrans trans;
+
   final _fKey = GlobalKey<FormState>();
 
   String _usario = "Isaac";
@@ -33,8 +35,7 @@ class _EntradaFormState extends State<EntradaForm> {
   String _codigoProductor = "";
   String _cedula = "";
   String _comunidad = "";
-  String _transporte = "Caro";
-  final List<String> medios = ['Caro', 'Avion'];
+  String _transporte = "Carro";
 
   final clienteFocusNode = FocusNode();
   final IdFocusNode = FocusNode();
@@ -47,9 +48,10 @@ class _EntradaFormState extends State<EntradaForm> {
 
   @override
   void initState() {
+    trans = this.widget.trans;
+    super.initState();
     stepperPage.productos = productos;
     productList.productos = productos;
-    super.initState();
   }
 
   @override
@@ -89,7 +91,7 @@ class _EntradaFormState extends State<EntradaForm> {
                           _usario = value
                         },
                         decoration: const InputDecoration(labelText: 'Quien'),
-                        initialValue: 'Isaac',
+                        initialValue: 'Isaac', //username given based on int
                         attribute: 'quien',
                         onSaved: (value) => {
                             _usario = value
@@ -124,7 +126,7 @@ class _EntradaFormState extends State<EntradaForm> {
                             ],
                           )))
                           .toList(),
-                      value: _productorName,
+                      value: _productorName, //number given depending on name
                       hint: "Select one",
                       searchHint: "Select one",
                       onChanged: (value) {
@@ -141,7 +143,7 @@ class _EntradaFormState extends State<EntradaForm> {
                       onSaved: (value) {
                         _codigoProductor = value;
                       },
-                      initialValue: _codigoProductor,
+                      initialValue: this.widget.trans.p_code,
                       autofocus: true,
                       focusNode: CodigoFocusNode,
                       textInputAction: TextInputAction.next,
@@ -152,7 +154,7 @@ class _EntradaFormState extends State<EntradaForm> {
                     ),
                     SizedBox(height: 10),
                     TextFormField(
-                      initialValue: _cedula,
+                      initialValue: "", //name given according to id
                       decoration: const InputDecoration(
                         labelText: 'ID',
                       ),
@@ -169,26 +171,25 @@ class _EntradaFormState extends State<EntradaForm> {
                       },
                     ),
                     SizedBox(height: 10),
-                    TextFormField(
-                      initialValue: _comunidad,
-                      decoration: const InputDecoration(
-                        labelText: 'Ciudad / Comunidad',
-                      ),
-                      inputFormatters: [LengthLimitingTextInputFormatter(30)],
-                      onSaved: (value) {
-                        _comunidad = value;
-                      },
-                      autofocus: true,
-                      focusNode: DondeFocusNode,
-                      textInputAction: TextInputAction.next,
-                      onTap: () {
-                        FocusScope.of(context).unfocus();
-                        FocusScope.of(context).requestFocus(DondeFocusNode);
-                      },
-                    ),
+                    FormBuilderDropdown(
+                        decoration: const InputDecoration(labelText: 'Comunidad'),
+                        initialValue: this.widget.trans.comunidad,
+                        attribute: 'comunidad',
+                        onSaved: (value) => {
+                          if(value == 'Shuar') _comunidad = "SH",
+                          if(value == 'Achuar') _comunidad = "ACH"
+                        },
+                        items: [
+                          'Shuar',
+                          'Achuar'
+                        ].map((comu) => DropdownMenuItem(
+                            value: comu,
+                            child: Text("$comu",
+                                textAlign: TextAlign.left)
+                        )).toList()),
                     SizedBox(height: 10),
                     FormBuilderDropdown(
-                        initialValue: _transporte,
+                        initialValue: widget.trans.transporte,
                         attribute: 'mala',
                         onSaved: (value) {
                           _transporte = value;
@@ -196,7 +197,7 @@ class _EntradaFormState extends State<EntradaForm> {
                         decoration: const InputDecoration(
                           labelText: 'Medio de Transporte',
                         ),
-                        items: medios.map((medio) => DropdownMenuItem(
+                        items: ['Carro', 'Avion'].map((medio) => DropdownMenuItem(
                                 value: medio,
                                 child: Text("$medio", textAlign: TextAlign.center)))
                             .toList()),
@@ -233,7 +234,6 @@ class _EntradaFormState extends State<EntradaForm> {
         onPressed: () {
           confirmationDialog(context, "Estas seguro ?",
               title: "Confirmacion",
-              confirmationText: "Click here to confirmar",
               positiveText: "Registrar", positiveAction: () {
                 //empty values
                 //push entrada
@@ -246,12 +246,6 @@ class _EntradaFormState extends State<EntradaForm> {
     );
   }
 
-  getEntrada() async {
-    var client = http.Client();
-    var url = 'https://wakerakka.herokuapp.com/';
-    var endpoint = 'authenticate/';
-    //
-  }
   void _validateInputs() {
     _fKey.currentState.save();
  }
