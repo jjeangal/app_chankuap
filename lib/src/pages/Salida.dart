@@ -95,30 +95,20 @@ class _Salida extends State<Salida> {
       var uriResponse = await client.get(url+endpoint);
       //Future<http.Response> response = http.get(url+endpoint);
 
-      _buildSalidas();
-
       if (uriResponse.statusCode == 200) {
         List<dynamic> body = jsonDecode(uriResponse.body);
 
         for (int i = 0; i < body.length; i++) {
           this.salidas.add(SalidaOverview.fromJson(body[i]));
         }
+        setState(() {});
       } else {
         // If the server did not return a 200 OK response,
         // then throw an exception.
         throw Exception('Failed to load album');
       }
-
-      print(await uriResponse);
-
     } finally {
       client.close();
     }
-  }
-
-
-
-  _buildSalidas() {
-
   }
 }

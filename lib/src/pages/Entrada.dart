@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app_chankuap/src/Widgets/add_bar.dart';
 import 'package:app_chankuap/src/Widgets/app_icons.dart';
 import 'package:app_chankuap/src/Widgets/data_object.dart';
@@ -17,16 +19,13 @@ class Entrada extends StatefulWidget {
 
 class _EntradaState extends State<Entrada> {
 
-  final List<EntradaOverview> entradas = [
-    new EntradaOverview(1, '10-11-2000', 'Isaac', 1),
-    new EntradaOverview(2, '15-11-2000', 'Yollanda', 2),
-  ];
+  final List<EntradaOverview> entradas = [];
 
   final EntradaForm entrada_form = EntradaForm(id: 1);
 
   void initState() {
-    super.initState();
     _getEntradas();
+    super.initState();
   }
 
   @override
@@ -62,7 +61,7 @@ class _EntradaState extends State<Entrada> {
             child: Stack(children: [
               Align(
                   alignment: Alignment(-0.8, -0.5),
-                  child: Text('${entradas[index].usario}',
+                  child: Text('Usuario', //${entradas[index].usario}
                       style: TextStyle(
                           color: Color(0xff073B3A),
                           fontWeight: FontWeight.bold,
@@ -99,21 +98,26 @@ class _EntradaState extends State<Entrada> {
   _getEntradas() async {
       var client = http.Client();
       var url = 'https://wakerakka.herokuapp.com/';
-      var endpoint = '/transactions/in/';
+      var endpoint = 'transactions/in/';
       try {
         var uriResponse = await client.get(url+endpoint);
+        //Future<http.Response> response = http.get(url+endpoint);
 
-        _buildEntradas();
+        if (uriResponse.statusCode == 200) {
+          List<dynamic> body = jsonDecode(uriResponse.body);
+          print(body.length);
 
-        print(await uriResponse);
-
+          for (int i = 0; i < body.length; i++) {
+            this.entradas.add(EntradaOverview.fromJson(body[i]));
+          }
+          setState(() {});
+        } else {
+          // If the server did not return a 200 OK response,
+          // then throw an exception.
+          throw Exception('Failed to load album');
+        }
       } finally {
         client.close();
       }
-  }
-
-  _buildEntradas() {
-    //entradas.add(EntradaOverview(3, '20-01-2020', 'Cuenca', 3));
-    print("added");
   }
 }

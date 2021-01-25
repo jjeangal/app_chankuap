@@ -132,9 +132,16 @@ class Producto {
 @JsonSerializable()
 class ListEntradaOverviews {
 
-  final List<EntradaOverview> list;
+  final List<EntradaOverview> ListEntradas;
 
-  ListEntradaOverviews(this.list);
+  ListEntradaOverviews.fromJson(Map<String, dynamic> json) :
+        ListEntradas = json['overviews'].toJsonList;
+
+  Map<String, dynamic> toJson() => {
+    "overviews": ListEntradas.map((e) => e.toJson()).toList(),
+  };
+
+  ListEntradaOverviews(this.ListEntradas);
 }
 
 @JsonSerializable()
@@ -142,8 +149,10 @@ class EntradaOverview {
 
   final int trans_id;
   final String fecha;
-  final String usario;
+  final int usario;
   final int provider_id;
+
+  List<Map<String, dynamic>> ListSalidas;
 
   EntradaOverview.fromJson(Map<String, dynamic> json) :
     trans_id = json['TRANS_ID'],
@@ -157,6 +166,18 @@ class EntradaOverview {
     "username": usario,
     "PROVIDER_ID": provider_id
   };
+
+  dynamic toJsonList(List<EntradaOverview> listToParse){
+
+    ListSalidas = [];
+
+    for(EntradaOverview salida in listToParse){
+      ListSalidas.add(salida.toJson());
+    }
+    print(ListSalidas);
+    return ListSalidas;
+
+  }
 
   EntradaOverview(this.trans_id, this.fecha, this.usario, this.provider_id);
 }
@@ -208,7 +229,6 @@ class SalidaOverview {
     }
     print(ListSalidas);
     return ListSalidas;
-
   }
 
   SalidaOverview(this.trans_id, this.username, this.cliente, this.fecha);
