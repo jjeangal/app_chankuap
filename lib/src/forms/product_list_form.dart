@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 
 class ProductListForm extends StatefulWidget {
   List<Producto> productos;
+  final Function() notifyParent;
 
-  ProductListForm({Key key, productos}) : super(key: key);
+  ProductListForm({Key key, productos, @required this.notifyParent}) : super(key: key);
 
   @override
   _ProductListFormState createState() => _ProductListFormState();

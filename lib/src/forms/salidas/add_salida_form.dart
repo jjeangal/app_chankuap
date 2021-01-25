@@ -36,11 +36,12 @@ class _AddSalidaFormState extends State<AddSalidaForm> {
 
   final nameFocusNode = FocusNode();
   final stepperPage = new StepperPage();
-  final productList = ProductListForm();
+  ProductListForm productList;
 
   @override
   void initState() {
     super.initState();
+    productList = new ProductListForm(notifyParent: refresh);
     stepperPage.productos = productos;
     productList.productos = productos;
   }
@@ -106,15 +107,6 @@ class _AddSalidaFormState extends State<AddSalidaForm> {
                   labelText: 'Cliente',
                 ),
                 inputFormatters: [LengthLimitingTextInputFormatter(30)],
-                validator: (name) {
-                  if (name.isEmpty) {
-                    return 'Name is required';
-                  }
-                  if (name.length < 3) {
-                    return 'Name is too short';
-                  }
-                  return null;
-                },
                 onSaved: (cliente) {
                   _cliente = cliente;
                 },
@@ -211,6 +203,10 @@ class _AddSalidaFormState extends State<AddSalidaForm> {
     } finally {
       client.close();
     }
+  }
+
+  refresh() {
+    setState(() {});
   }
 }
 

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,14 +10,23 @@ import '../buttons/transac_delete_button.dart';
 import '../Widgets/data_object.dart';
 import '../forms/salidas/salida_form.dart';
 
-class Salida extends StatelessWidget {
+class Salida extends StatefulWidget {
+  @override
+  _Salida createState() => _Salida();
+}
 
-  final List<SalidaOverview> salidas = [
-    new SalidaOverview(1, 'Tienda Macas', '10-11-2000'),
-    new SalidaOverview(2, 'Quito', '15-11-2000'),
-  ];
+
+class _Salida extends State<Salida> {
+
+  final List<SalidaOverview> salidas = [];
 
   final SalidaForm salida_form = SalidaForm();
+
+  @override
+  void initState() {
+    _getSalidas();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,11 +90,24 @@ class Salida extends StatelessWidget {
   _getSalidas() async {
     var client = http.Client();
     var url = 'https://wakerakka.herokuapp.com/';
-    var endpoint = '/transactions/in/';
+    var endpoint = 'transactions/out/';
     try {
       var uriResponse = await client.get(url+endpoint);
+      //Future<http.Response> response = http.get(url+endpoint);
 
       _buildSalidas();
+
+      if (uriResponse.statusCode == 200) {
+        List<dynamic> body = jsonDecode(uriResponse.body);
+
+        for (int i = 0; i < body.length; i++) {
+          this.salidas.add(SalidaOverview.fromJson(body[i]));
+        }
+      } else {
+        // If the server did not return a 200 OK response,
+        // then throw an exception.
+        throw Exception('Failed to load album');
+      }
 
       print(await uriResponse);
 
@@ -91,6 +115,8 @@ class Salida extends StatelessWidget {
       client.close();
     }
   }
+
+
 
   _buildSalidas() {
 

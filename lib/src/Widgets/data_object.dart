@@ -110,6 +110,7 @@ class Producto {
     "price": precio,
     "bodega": "BO1"
   };
+
  dynamic toJsonList(List<Producto> listToParse){
 
     ListProducts = [];
@@ -128,6 +129,15 @@ class Producto {
   }
 }
 
+@JsonSerializable()
+class ListEntradaOverviews {
+
+  final List<EntradaOverview> list;
+
+  ListEntradaOverviews(this.list);
+}
+
+@JsonSerializable()
 class EntradaOverview {
 
   final int trans_id;
@@ -135,16 +145,73 @@ class EntradaOverview {
   final String usario;
   final int provider_id;
 
+  EntradaOverview.fromJson(Map<String, dynamic> json) :
+    trans_id = json['TRANS_ID'],
+    fecha = json['date'],
+    usario = json['username'],
+    provider_id = json['PROVIDER_ID'];
+
+  Map<String, dynamic> toJson() => {
+    "TRANS_ID": trans_id,
+    "date": fecha,
+    "username": usario,
+    "PROVIDER_ID": provider_id
+  };
+
   EntradaOverview(this.trans_id, this.fecha, this.usario, this.provider_id);
+}
+
+
+@JsonSerializable()
+class ListSalidaOverviews {
+
+  final List<SalidaOverview> ListSalidas;
+
+  ListSalidaOverviews.fromJson(Map<String, dynamic> json) :
+      ListSalidas = json['overviews'].toJsonList;
+
+  Map<String, dynamic> toJson() => {
+      "overviews": ListSalidas.map((e) => e.toJson()).toList(),
+  };
+
+  ListSalidaOverviews(this.ListSalidas);
 }
 
 class SalidaOverview {
 
   final int trans_id;
+  final int username;
   final String cliente;
   final String fecha;
 
-  SalidaOverview(this.trans_id, this.cliente, this.fecha);
+  List<Map<String, dynamic>> ListSalidas;
+
+  SalidaOverview.fromJson(Map<String, dynamic> json) :
+        trans_id = json['TRANS_ID'],
+        fecha = json['date'],
+        username = json['username'],
+        cliente = json['cliente'];
+
+  Map<String, dynamic> toJson() => {
+    "TRANS_ID": trans_id,
+    "date": fecha,
+    "username": username,
+    "PROVIDER_ID": cliente
+  };
+
+  dynamic toJsonList(List<SalidaOverview> listToParse){
+
+    ListSalidas = [];
+
+    for(SalidaOverview salida in listToParse){
+      ListSalidas.add(salida.toJson());
+    }
+    print(ListSalidas);
+    return ListSalidas;
+
+  }
+
+  SalidaOverview(this.trans_id, this.username, this.cliente, this.fecha);
 }
 
 class SendEntrada {
