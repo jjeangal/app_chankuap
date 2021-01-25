@@ -88,15 +88,15 @@ class _EntradaState extends State<Entrada> {
                   alignment: Alignment(1.05, -1.4),
                   child: TransactionDeleteButton())
             ])),
-        onTap: () {
-          _getEntrada(entradas[index].trans_id).then((value) => {
+        onTap: () async {
+          await _getEntrada(entradas[index].trans_id).then((value) => {
             setState(() {
               this.trans = value;
             })
           });
           Navigator.push(
             context,
-            MaterialPageRoute(
+            new MaterialPageRoute(
                 builder: (context) => new EntradaForm(trans: trans)),
           );
         });

@@ -46,6 +46,7 @@ class _EntradaFormState extends State<EntradaForm> {
 
   @override
   void initState() {
+    print(widget.trans.fecha);
     stepperPage.productos = productos;
     productList.productos = productos;
     super.initState();

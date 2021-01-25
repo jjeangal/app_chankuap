@@ -83,8 +83,8 @@ class _Salida extends State<Salida> {
                 child: TransactionDeleteButton())
           ]),
         ),
-        onTap: () {
-          _getSalida(this.salidas[index].getId()).then((result) {
+        onTap: () async {
+          await _getSalida(this.salidas[index].getId()).then((result) {
             setState(() {
               this.trans = result;
               print(trans.fecha);
