@@ -28,7 +28,7 @@ class Profile extends StatelessWidget {
                 child: Icon(
                   Icons.person,
                   size: 96,
-                  color: Theme.of(context).primaryColor,
+                  color: Color(0xff0F956A),
                 )
               ),
               Align(

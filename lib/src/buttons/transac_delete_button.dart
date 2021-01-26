@@ -17,6 +17,7 @@ class _AddButtonState extends State<TransactionDeleteButton> {
     return IconButton(
         iconSize: 20,
         icon: Icon(Icons.do_disturb_on_outlined),
+        color: Color(0xff9F4A54),
         onPressed: () => confirmationDialog(context, "Estas seguro ?",
                 title: "Confirmacion",
                 confirmationText: "Click here to confirmar",

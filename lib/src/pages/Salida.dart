@@ -26,9 +26,12 @@ class _Salida extends State<Salida> {
     _getSalidas().then((result) {
         setState(() {
           this.salidas = result;
+          this.salidas.sort((a, b) => (b.trans_id).compareTo(a.trans_id));
         });
       }
     );
+
+
     super.initState();
   }
 
@@ -72,16 +75,25 @@ class _Salida extends State<Salida> {
                           TextStyle(color: Color(0xff073B3A), fontSize: 18))),
             ),
             Align(
-                alignment: Alignment(0.65, 0),
-                child: Text('${salidas[index].fecha}',
-                    style: TextStyle(
-                        color: Color(0xff073B3A),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16))),
+              alignment: Alignment(0.35, 0),
+              child: Text('${salidas[index].fecha}',
+                  style: TextStyle(
+                    color: Color(0xff073B3A),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ))),
             Align(
-                alignment: Alignment(1.05, -1.4),
-                child: TransactionDeleteButton())
-          ]),
+              alignment: Alignment(0.9, 0),
+              child: Text('${salidas[index].trans_id}',
+                  style: TextStyle(
+                      color: Color(0xff073B3A),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16)),
+            ),
+            Align(
+              alignment: Alignment(0.8, 0),
+              child: TransactionDeleteButton())
+            ])
         ),
         onTap: () async {
           await _getSalida(this.salidas[index].getId()).then((result) {

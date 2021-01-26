@@ -29,7 +29,7 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
   String _codigoProductor = "";
   String _cedula = "";
   String _comunidad = "";
-  String _transporte = "";
+  String _transporte = "Carro";
 
   List<Producto> productos = [];
 
@@ -64,7 +64,8 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                     SizedBox(height: 10),
                     Container(
                       child: Text(
-                        "Entrada De Mercaderia - Ficha n°1",
+                        "Entrada De Mercaderia - Ficha n°" +
+                          "2(fixo)", //request numero latest ficha
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 18),
                       ),
@@ -73,6 +74,16 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                     InputDatePickerFormField(
                         onDateSaved: (value) => {
                           _fechaUno = DateFormat(
+                              'yyyy-MM-dd').format(value).toString()
+                        },
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2021, 1, 1),
+                        lastDate:  DateTime(2060, 1, 1)
+                    ),
+                    SizedBox(height: 10),
+                    InputDatePickerFormField(
+                        onDateSaved: (value) => {
+                          _fechaDos = DateFormat(
                               'yyyy-MM-dd').format(value).toString()
                         },
                         initialDate: DateTime.now(),
@@ -99,11 +110,17 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                     SizedBox(height: 10),
                     TextFormField(
                       decoration: const InputDecoration(
-                        labelText: 'Cliente',
+                        labelText: 'Nombre del Productor',
                       ),
                       inputFormatters: [LengthLimitingTextInputFormatter(30)],
                       onSaved: (name) {
                         _productorName = name;
+                      },
+                      validator: (name) {
+                        if (name.isEmpty) {
+                          return 'Necesitas el nombre del productor';
+                        }
+                        return null;
                       },
                       autofocus: true,
                       focusNode: clienteFocusNode,
@@ -122,6 +139,12 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                       onSaved: (codigo) {
                         _codigoProductor = codigo;
                       },
+                      validator: (codigo) {
+                        if (codigo.isEmpty) {
+                          return 'Necesitas un codigo';
+                        }
+                        return null;
+                      },
                       autofocus: true,
                       focusNode: CodigoFocusNode,
                       textInputAction: TextInputAction.next,
@@ -133,11 +156,17 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                     SizedBox(height: 10),
                     TextFormField(
                       decoration: const InputDecoration(
-                        labelText: 'ID',
+                        labelText: 'Cedula',
                       ),
                       inputFormatters: [LengthLimitingTextInputFormatter(30)],
                       onSaved: (id) {
                         _cedula = id;
+                      },
+                      validator: (id) {
+                        if (id.isEmpty) {
+                          return 'Necesitas un cedula';
+                        }
+                        return null;
                       },
                       autofocus: true,
                       focusNode: IdFocusNode,
@@ -153,8 +182,7 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                         initialValue: "Shuar",
                         attribute: 'comunidad',
                         onSaved: (value) => {
-                          if(value == 'Shuar') _comunidad = "SH",
-                          if(value == 'Achuar') _comunidad = "ACH"
+                          _comunidad = value,
                         },
                         items: [
                           'Shuar',
@@ -166,6 +194,7 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                         )).toList()),
                     SizedBox(height: 10),
                     FormBuilderDropdown(
+                      initialValue: _transporte,
                       onSaved: (value) => _transporte = value,
                         attribute: 'medio',
                         decoration: const InputDecoration(
@@ -200,7 +229,7 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                       ],
                     ),
                     Container(
-                        height: 400,
+                        height: 300,
                         child: Padding(
                             padding: EdgeInsets.fromLTRB(0, 10, 0, 15),
                             child: productList)),
@@ -215,7 +244,6 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                 //empty values
                 //push entrada
                 _validateInputs();
-                _sendEntrada();
           });
         },
         child: Icon(Icons.add),
@@ -228,6 +256,7 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
     if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
       _formKey.currentState.save();
+      _sendEntrada();
     }
   }
 
@@ -243,10 +272,10 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
       var uriResponse = await client.post(url+endpoint,
           body: json.encode(trans));
       print(json.encode(trans));
-      print(await uriResponse.statusCode);
 
-      Navigator.pop(context);
+      if (await uriResponse.statusCode == 201) Navigator.pop(context);
 
+      else print(await uriResponse.statusCode);
     } finally {
       client.close();
     }

@@ -44,23 +44,25 @@ class _StepperPageState extends State<StepperPage> {
   @override
   Widget build(BuildContext context) {
     return new Container(
+        height: MediaQuery.of(context).size.height,
         child: CupertinoPageScaffold(
           navigationBar: CupertinoNavigationBar(
             middle: Text('Anadir Materia Prima'),
+
           ),
-        child: SafeArea(
-          child: OrientationBuilder(
-            builder: (BuildContext context, Orientation orientation) {
-              switch (orientation) {
-                case Orientation.portrait:
-                  return _buildStepper(StepperType.vertical);
-                case Orientation.landscape:
-                  return _buildStepper(StepperType.horizontal);
-                default:
-                  throw UnimplementedError(orientation.toString());
-              }
-            },
-          ),
+          child: SafeArea(
+            child: OrientationBuilder(
+              builder: (BuildContext context, Orientation orientation) {
+                switch (orientation) {
+                  case Orientation.portrait:
+                    return _buildStepper(StepperType.vertical);
+                  case Orientation.landscape:
+                    return _buildStepper(StepperType.horizontal);
+                  default:
+                    throw UnimplementedError(orientation.toString());
+                }
+              },
+            ),
         ),
       )
     );
@@ -91,7 +93,13 @@ class _StepperPageState extends State<StepperPage> {
             key: _formKey,
               child: Column(children: <Widget>[
                   TypeAheadFormField(
+                    initialValue: this.name,
                     onSaved: (value) => name = value,
+                    validator: (val) {
+                      if(val.isEmpty) return 'El nombre de Producto no '
+                          'esta bueno';
+                      return null;
+                    },
                     textFieldConfiguration: TextFieldConfiguration(
                       autofocus: true,
                       decoration: const InputDecoration(
@@ -153,6 +161,11 @@ class _StepperPageState extends State<StepperPage> {
                     onSaved: (canti) {
                       cantidad = double.parse(canti.toString());
                     },
+                    // ignore: missing_return
+                    validator: (val) {
+                      if(val.isEmpty) return 'Pone una cantidad';
+                      return null;
+                    },
                     autofocus: true,
                     focusNode: CantidadFocusNode,
                     textInputAction: TextInputAction.next,
@@ -165,7 +178,6 @@ class _StepperPageState extends State<StepperPage> {
                     onSaved: (uni) => unidad = _unidadToInt(uni),
                       decoration: const InputDecoration(labelText: 'Unidad'),
                       initialValue: 'g',
-
                       //initialValue: 1,
                       attribute: 'unidad',
                       items: ['g', 'kg', 'lb', 'ml', 'L']
@@ -183,6 +195,11 @@ class _StepperPageState extends State<StepperPage> {
                     onSaved: (price) {
                       precio = price;
                     },
+                    validator: (val) {
+                      if(val.isEmpty) return 'Necesitas un precio';
+                      return null;
+                    },
+                    initialValue: '${this.precio}',
                     autofocus: true,
                     focusNode: PrecioFocusNode,
                     textInputAction: TextInputAction.next,
@@ -204,7 +221,7 @@ class _StepperPageState extends State<StepperPage> {
         title: Text("Producto"),
         subtitle: Text('Selecionar nombre y codigo'),
         content: LimitedBox(
-            maxWidth: 300, maxHeight: 600, child: _buildStep())),
+            maxWidth: 300, maxHeight: 500, child: _buildStep())),
     ];
   }
 

@@ -61,7 +61,8 @@ class _AddSalidaFormState extends State<AddSalidaForm> {
               SizedBox(height: 10),
               Container(
                 child: Text(
-                  "Salida De Mercaderia",
+                  "Salida De Mercaderia - Ficha n°" +
+                      "2(fixo)", //get latest id
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 18),
                 ),
@@ -111,6 +112,12 @@ class _AddSalidaFormState extends State<AddSalidaForm> {
                   _cliente = cliente;
                 },
                 autofocus: true,
+                validator: (cliente) {
+                  if (cliente.isEmpty) {
+                    return 'El nombre del cliente es obligatorio';
+                  }
+                  return null;
+                },
                 focusNode: nameFocusNode,
                 textInputAction: TextInputAction.next,
                 onTap: () {
@@ -120,6 +127,7 @@ class _AddSalidaFormState extends State<AddSalidaForm> {
               ),
               SizedBox(height: 10),
               FormBuilderDropdown(
+                initialValue: 'Carro',
                   onSaved: (value) => _transporte = value,
                   attribute: 'medio',
                   decoration: const InputDecoration(
@@ -153,7 +161,7 @@ class _AddSalidaFormState extends State<AddSalidaForm> {
                 ],
               ),
               Container(
-                  height: 400,
+                  height: 300,
                   child: Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 15),
                       child: productList)),
@@ -168,7 +176,6 @@ class _AddSalidaFormState extends State<AddSalidaForm> {
               confirmationText: "Click here to confirmar",
               positiveText: "Registrar", positiveAction: () {
                 _validateInputs();
-                _sendSalida();
               });
         },
         child: Icon(Icons.add),
@@ -181,6 +188,7 @@ class _AddSalidaFormState extends State<AddSalidaForm> {
     if (_fbkey.currentState.validate()) {
 //    If all data are correct then save data to out variables
       _fbkey.currentState.save();
+      _sendSalida();
     }
   }
 

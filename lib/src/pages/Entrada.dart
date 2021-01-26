@@ -26,6 +26,7 @@ class _EntradaState extends State<Entrada> {
     _getEntradas().then((value) => {
       setState(() {
         this.entradas = value;
+        this.entradas.sort((a, b) => (b.trans_id).compareTo(a.trans_id));
       })
     });
     super.initState();
@@ -71,13 +72,13 @@ class _EntradaState extends State<Entrada> {
                           fontSize: 16))),
               Align(
                   alignment: Alignment(-0.8, 0.5),
-                  child: Text('${entradas[index].provider_id}',
+                  child: Text('Providor ID', //${entradas[index].provider_id}
                       style: TextStyle(
                           color: Color(0xff073B3A),
                           fontStyle: FontStyle.italic,
                           fontSize: 16))),
               Align(
-                  alignment: Alignment(0.65, 0),
+                  alignment: Alignment(0.35, 0),
                   child: Text('${entradas[index].fecha}',
                       style: TextStyle(
                         color: Color(0xff073B3A),
@@ -85,7 +86,15 @@ class _EntradaState extends State<Entrada> {
                         fontSize: 16,
                       ))),
               Align(
-                  alignment: Alignment(1.05, -1.4),
+                alignment: Alignment(0.9, 0),
+                child: Text('${entradas[index].trans_id}',
+                    style: TextStyle(
+                        color: Color(0xff073B3A),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16)),
+              ),
+              Align(
+                  alignment: Alignment(0.8, 0),
                   child: TransactionDeleteButton())
             ])),
         onTap: () async {

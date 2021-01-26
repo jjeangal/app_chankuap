@@ -69,7 +69,8 @@ class _EntradaFormState extends State<EntradaForm> {
                     SizedBox(height: 10),
                     Container(
                       child: Text(
-                        "Entrada De Mercaderia - Ficha n°1",
+                        "Entrada De Mercaderia - Ficha n°" +
+                            widget.trans.trans_id.toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 18),
                       ),
@@ -124,7 +125,7 @@ class _EntradaFormState extends State<EntradaForm> {
                             ],
                           )))
                           .toList(),
-                      value: _productorName, //number given depending on name
+                      value: 'Yollanda', //usario de int a p_name
                       hint: "Select one",
                       searchHint: "Select one",
                       onChanged: (value) {
@@ -141,7 +142,7 @@ class _EntradaFormState extends State<EntradaForm> {
                       onSaved: (value) {
                         _codigoProductor = value;
                       },
-                      initialValue: "Codigo ",
+                      initialValue: _codigoProductor,
                       autofocus: true,
                       validator: (codigo) {
                         if (codigo.isEmpty) {
@@ -158,9 +159,9 @@ class _EntradaFormState extends State<EntradaForm> {
                     ),
                     SizedBox(height: 10),
                     TextFormField(
-                      initialValue: "", //name given according to id
+                      initialValue: widget.trans.provider_id.toString(), //name given according to id
                       decoration: const InputDecoration(
-                        labelText: 'ID',
+                        labelText: 'Cedula',
                       ),
                       inputFormatters: [LengthLimitingTextInputFormatter(30)],
                       onSaved: (value) {
@@ -180,8 +181,7 @@ class _EntradaFormState extends State<EntradaForm> {
                         initialValue: _comunidad,
                         attribute: 'comunidad',
                         onSaved: (value) => {
-                          if(value == 'Shuar') _comunidad = "SH",
-                          if(value == 'Achuar') _comunidad = "ACH"
+                          _comunidad = value,
                         },
                         items: [
                           'Shuar',
@@ -228,7 +228,7 @@ class _EntradaFormState extends State<EntradaForm> {
                       ],
                     ),
                     Container(
-                        height: 400,
+                        height: 300,
                         child: Padding(
                             padding: EdgeInsets.fromLTRB(0, 10, 0, 15),
                             child: productList)),
@@ -251,5 +251,5 @@ class _EntradaFormState extends State<EntradaForm> {
 
   void _validateInputs() {
     _fKey.currentState.save();
- }
+  }
 }
