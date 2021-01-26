@@ -79,7 +79,7 @@ class _ExportState extends State<Export> {
                               flex: 10,
                               child: FormBuilderDateRangePicker(
                                 decoration: const InputDecoration(
-                                  labelText: 'Intial Fecha ',
+                                  labelText: 'Fecha Rango',
                                 ),
                                 onSaved: (una) => {
                                   fecha_una = una[0].toString().substring(0, 10),
@@ -209,14 +209,22 @@ class _ExportState extends State<Export> {
                           fontStyle: FontStyle.italic,
                           fontSize: 16))),
               Align(
-                  alignment: Alignment(0.65, 0),
+                  alignment: Alignment(0.55, 0),
                   child: Text('10/11/2000',
                       style: TextStyle(
                         color: Color(0xff073B3A),
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ))),
-            ])),
+              Align(
+                alignment: Alignment(0.85, 0),
+                child: Text("ID",
+                    style: TextStyle(
+                        color: Color(0xff073B3A),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+              )))]
+            )),
         onTap: () {
           Navigator.push(
             context,

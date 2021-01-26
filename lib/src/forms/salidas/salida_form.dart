@@ -172,7 +172,7 @@ class _SalidaFormState extends State<SalidaForm> {
               });
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xff9F4A54),
       ),
     );
   }
