@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../forms/entradas/entrada_form.dart';
@@ -223,7 +222,7 @@ class _ExportState extends State<Export> {
             context,
             MaterialPageRoute(
                 builder: (context) => new EntradaForm(trans:
-                new EntradaOverview(1, "", 2, 2))),
+                new EntradaOverview(1, "2022-11-11", 2, 2))),
           );
         });
   }

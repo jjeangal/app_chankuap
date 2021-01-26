@@ -60,7 +60,8 @@ class _SalidaFormState extends State<SalidaForm> {
               SizedBox(height: 10),
               Container(
                 child: Text(
-                  "Salida De Mercaderia",
+                  "Salida De Mercaderia - Ficha n°" +
+                      widget.trans.trans_id.toString(),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 18),
                 ),
@@ -103,7 +104,7 @@ class _SalidaFormState extends State<SalidaForm> {
                 inputFormatters: [LengthLimitingTextInputFormatter(30)],
                 validator: (userName) {
                   if (userName.isEmpty) {
-                    return 'Name is required';
+                    return 'El nombre del cliente es obligatorio';
                   }
                   return null;
                 },
@@ -153,7 +154,7 @@ class _SalidaFormState extends State<SalidaForm> {
                 ],
               ),
               Container(
-                  height: 400,
+                  height: 300,
                   child: Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 15),
                       child: productList)),
