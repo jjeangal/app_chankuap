@@ -120,7 +120,7 @@ class _EntradaFormState extends State<EntradaForm> {
                               Text("$quien",
                                   textAlign: TextAlign.left),
                               Expanded(flex: 1, child: Container()),
-                              Text("Limite productor",
+                              Text("Productor Limit",
                                   textAlign: TextAlign.right)
                             ],
                           )))

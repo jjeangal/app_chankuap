@@ -1,37 +1,34 @@
 import 'dart:convert';
 
+import 'package:app_chankuap/src/Widgets/CustomAlertDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import '../Widgets/add_bar.dart';
 import '../Widgets/app_icons.dart';
-import '../buttons/transac_delete_button.dart';
 import '../Widgets/data_object.dart';
 import '../forms/salidas/salida_form.dart';
+
+List<SalidaOverview> salidas = [];
 
 class Salida extends StatefulWidget {
   @override
   _Salida createState() => _Salida();
 }
 
-
 class _Salida extends State<Salida> {
-
-  List<SalidaOverview> salidas = [];
   SalidaOverview trans;
 
   @override
   void initState() {
     _getSalidas().then((result) {
         setState(() {
-          this.salidas = result;
-          this.salidas.sort((a, b) => (b.trans_id).compareTo(a.trans_id));
+          salidas = result;
+          salidas.sort((a, b) => (b.trans_id).compareTo(a.trans_id));
         });
       }
     );
-
-
     super.initState();
   }
 
@@ -91,12 +88,30 @@ class _Salida extends State<Salida> {
                       fontSize: 16)),
             ),
             Align(
-              alignment: Alignment(0.8, 0),
-              child: TransactionDeleteButton())
+                alignment: Alignment(0.8, 0),
+                child:  IconButton(
+                    iconSize: 20,
+                    icon: Icon(Icons.do_disturb_on_outlined),
+                    color: Color(0xff9F4A54),
+                    onPressed: () {
+                      var dialog = CustomAlertDialog(
+                        title: "Eliminar la transacción",
+                        message: "Estas seguro?",
+                        onPostivePressed: () {
+                          _deleteSalida(index);
+                        },
+                        positiveBtnText: 'Si',
+                        negativeBtnText: 'No',
+                      );
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => dialog
+                      );
+                    }))
             ])
         ),
         onTap: () async {
-          await _getSalida(this.salidas[index].getId()).then((result) {
+          await _getSalida(salidas[index].getId()).then((result) {
             setState(() {
               this.trans = result;
               print(trans.fecha);
@@ -133,7 +148,27 @@ class _Salida extends State<Salida> {
     }
   }
 
-  Future<List<SalidaOverview>>  _getSalidas() async {
+  _deleteSalida(int index) async {
+    var client = http.Client();
+    var url = 'https://wakerakka.herokuapp.com/';
+    var endpoint = 'transactions/out/${salidas[index].trans_id}/';
+
+    try {
+      var uriResponse = await client.delete(url + endpoint);
+      if (uriResponse.statusCode == 204) {
+        setState((){
+          salidas.removeAt(index);
+        });
+        Navigator.pop(context);
+      } else {
+        throw Exception('Failed to delete transaction');
+      }
+    } finally {
+      client.close();
+    }
+  }
+
+  Future<List<SalidaOverview>> _getSalidas() async {
     var client = http.Client();
     var url = 'https://wakerakka.herokuapp.com/';
     var endpoint = 'transactions/out/';

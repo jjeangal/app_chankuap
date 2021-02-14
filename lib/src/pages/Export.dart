@@ -149,33 +149,69 @@ class _ExportState extends State<Export> {
               Container(
                 height: screenHeight(context) * 0.12,
                 width: screenSize(context).width,
-                child: Align(
-                    alignment: Alignment.center,
-                    child: FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40.0),
-                          side: BorderSide(color: Color(0xff073B3A))
-                      ),
-                      onPressed: () => _export(),
-                      splashColor: Colors.grey,
-                      child: Container(
-                        height: 50,
-                        width: 120,
-                        child: Stack(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment(-0.2, 0),
-                              child: Text("Exportar",
-                                  style: TextStyle(color: Color(0xff073B3A))),
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Icon(Icons.add, color: Color(0xff073B3A)),
-                            )
-                          ],
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Container(),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40.0),
+                            side: BorderSide(color: Color(0xff073B3A))
                         ),
-                      ),
+                        onPressed: () => _export(),
+                        splashColor: Colors.grey,
+                        child: Container(
+                          height: 50,
+                          width: 120,
+                          child: Stack(
+                            children: <Widget>[
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text("Exportar",
+                                    style: TextStyle(color: Color(0xff073B3A))),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Container(),
+                    ),
+                    Expanded(
+                      flex: 3,
+                        child: FlatButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40.0),
+                              side: BorderSide(color: Color(0xff073B3A))
+                          ),
+                          onPressed: () => print('imprimir'),
+                          splashColor: Colors.grey,
+                          child: Container(
+                            height: 50,
+                            width: 120,
+                            child: Stack(
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text("Imprimir",
+                                      style: TextStyle(color: Color(0xff073B3A))),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Container(),
                     )
+                  ]
                 ),
               ),
             ],
@@ -209,22 +245,39 @@ class _ExportState extends State<Export> {
                           fontStyle: FontStyle.italic,
                           fontSize: 16))),
               Align(
-                  alignment: Alignment(0.55, 0),
-                  child: Text('10/11/2000',
+                  alignment: Alignment(0.5, -0.5),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2.8,
+                    child: Text('10/11/2000',
+                      textAlign: TextAlign.right,
                       style: TextStyle(
                         color: Color(0xff073B3A),
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                      ))),
+                      )))),
               Align(
-                alignment: Alignment(0.85, 0),
-                child: Text("ID",
-                    style: TextStyle(
-                        color: Color(0xff073B3A),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-              )))]
-            )),
+                alignment: Alignment(0.5, 0.5),
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 2.8,
+                  child: Text("ID",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                          color: Color(0xff073B3A),
+                          fontSize: 16,
+                      )
+                  )
+                )),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  child: IconButton(
+                    icon: Icon(Icons.print),
+                    color: Color(0xff073B3A),
+                    onPressed: () => print("print individual"),
+                  ),
+                ),
+              )
+            ])),
         onTap: () {
           Navigator.push(
             context,

@@ -1,14 +1,16 @@
 import 'dart:convert';
 
+import 'package:app_chankuap/src/Widgets/CustomAlertDialog.dart';
 import 'package:app_chankuap/src/Widgets/add_bar.dart';
 import 'package:app_chankuap/src/Widgets/app_icons.dart';
 import 'package:app_chankuap/src/Widgets/data_object.dart';
-import 'package:app_chankuap/src/buttons/transac_delete_button.dart';
 import 'package:app_chankuap/src/forms/entradas/entrada_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
+
+List<EntradaOverview> entradas = [];
 
 class Entrada extends StatefulWidget {
   Entrada({Key key}) : super(key: key);
@@ -18,15 +20,13 @@ class Entrada extends StatefulWidget {
 }
 
 class _EntradaState extends State<Entrada> {
-
-  List<EntradaOverview> entradas = [];
   EntradaOverview trans;
 
   void initState() {
     _getEntradas().then((value) => {
       setState(() {
-        this.entradas = value;
-        this.entradas.sort((a, b) => (b.trans_id).compareTo(a.trans_id));
+        entradas = value;
+        entradas.sort((a, b) => (b.trans_id).compareTo(a.trans_id));
       })
     });
     super.initState();
@@ -66,10 +66,12 @@ class _EntradaState extends State<Entrada> {
               Align(
                   alignment: Alignment(-0.8, -0.5),
                   child: Text('Usuario', //${entradas[index].usario}
-                      style: TextStyle(
-                          color: Color(0xff073B3A),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16))),
+                        style: TextStyle(
+                            color: Color(0xff073B3A),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                  )
+              ),
               Align(
                   alignment: Alignment(-0.8, 0.5),
                   child: Text('Providor ID', //${entradas[index].provider_id}
@@ -95,7 +97,25 @@ class _EntradaState extends State<Entrada> {
               ),
               Align(
                   alignment: Alignment(0.8, 0),
-                  child: TransactionDeleteButton())
+                  child:  IconButton(
+                    iconSize: 20,
+                    icon: Icon(Icons.do_disturb_on_outlined),
+                    color: Color(0xff9F4A54),
+                    onPressed: () {
+                      var dialog = CustomAlertDialog(
+                        title: "Eliminar la transacción",
+                        message: "Estas seguro?",
+                        onPostivePressed: () {
+                          _deleteEntrada(index);
+                        },
+                        positiveBtnText: 'Si',
+                        negativeBtnText: 'No',
+                      );
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => dialog
+                      );
+                    }))
             ])),
         onTap: () async {
           await _getEntrada(entradas[index].trans_id).then((value) => {
@@ -118,7 +138,6 @@ class _EntradaState extends State<Entrada> {
 
     try {
       var uriResponse = await client.get(url + endpoint);
-      print(endpoint);
 
       if (uriResponse.statusCode == 200) {
         Map<String, dynamic> body = json.decode(uriResponse.body);
@@ -127,6 +146,26 @@ class _EntradaState extends State<Entrada> {
 
       } else {
         throw Exception('Failed to load album');
+      }
+    } finally {
+      client.close();
+    }
+  }
+
+  _deleteEntrada(int index) async {
+    var client = http.Client();
+    var url = 'https://wakerakka.herokuapp.com/';
+    var endpoint = 'transactions/in/${entradas[index].trans_id}/';
+
+    try {
+      var uriResponse = await client.delete(url + endpoint);
+      if (uriResponse.statusCode == 204) {
+        setState((){
+          entradas.removeAt(index);
+        });
+        Navigator.pop(context);
+      } else {
+        throw Exception('Failed to delete transaction');
       }
     } finally {
       client.close();
