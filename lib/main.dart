@@ -79,7 +79,6 @@ class _MyHomePageState extends State<MyHomePage> {
         animationDuration: Duration(milliseconds: 200),
         onTap: (int tappedIndex) {
           _pageIndex = tappedIndex;
-          debugPrint("the index is $_pageIndex");
           setState(() {
             _showPage = _pageChooser(tappedIndex);
           });

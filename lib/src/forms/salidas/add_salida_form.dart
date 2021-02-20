@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:app_chankuap/src/Widgets/CustomAlertDialog.dart';
 
 import '../../forms/product_list_form.dart';
 
@@ -171,15 +172,22 @@ class _AddSalidaFormState extends State<AddSalidaForm> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          confirmationDialog(context, "Estas seguro ?",
-              title: "Confirmacion",
-              confirmationText: "Click here to confirmar",
-              positiveText: "Registrar", positiveAction: () {
-                _validateInputs();
-              });
+          var dialog = CustomAlertDialog(
+            title: "Registrar la transacción",
+            message: "Estas seguro?",
+            onPostivePressed: () {
+              //
+            },
+            positiveBtnText: 'Si',
+            negativeBtnText: 'No',
+          );
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => dialog
+          );
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xff073B3A),
       ),
     );
   }

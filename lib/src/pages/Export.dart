@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app_chankuap/src/Widgets/data_object.dart';
 import 'package:app_chankuap/src/app_bars/export_app_bar.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -8,6 +10,9 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 import '../forms/entradas/entrada_form.dart';
+
+List<EntradaOverview> en_trans = [];
+List<SalidaOverview> sal_trans = [];
 
 class Export extends StatefulWidget {
   Export({Key key}) : super(key: key);
@@ -24,7 +29,6 @@ class _ExportState extends State<Export> {
   String fecha_una;
   String fecha_dos;
   int tipo; // 1 -> entrada, 2 -> salida
-
 
   changeTitle(String title) {
     setState(() {
@@ -107,7 +111,10 @@ class _ExportState extends State<Export> {
                             Expanded(
                               flex: 9,
                               child: FormBuilderDropdown(
-                                onSaved: (value) => tipo = value,
+                                onSaved: (value) => {
+                                  if(value == 'Entrada') tipo = 1,
+                                  if(value == 'Salida') tipo = 2,
+                                },
                                 initialValue: 'Entrada',
                                 attribute: 'tipo',
                                 items: [
@@ -125,7 +132,7 @@ class _ExportState extends State<Export> {
                                   child: IconButton(
                                     icon: Icon(Icons.search),
                                     iconSize: 24,
-                                    onPressed: () => _searchTransactions(),
+                                    onPressed: () => _searchTransactions().then((value) => en_trans = value)
                                   )
                               )
                             ),
@@ -140,7 +147,7 @@ class _ExportState extends State<Export> {
                 height: screenHeight(context) * 0.68,
                 width: screenSize(context).width,
                 child: ListView.builder(
-                    itemCount: 5,
+                    itemCount: en_trans.length,
                     scrollDirection: Axis.vertical,
                     padding: EdgeInsets.all(5.0),
                     itemBuilder: (context, index) =>
@@ -232,7 +239,7 @@ class _ExportState extends State<Export> {
             child: Stack(children: [
               Align(
                   alignment: Alignment(-0.8, -0.5),
-                  child: Text('Productor name',
+                  child: Text('${en_trans[index].usario}',
                       style: TextStyle(
                           color: Color(0xff073B3A),
                           fontWeight: FontWeight.bold,
@@ -288,14 +295,42 @@ class _ExportState extends State<Export> {
         });
   }
 
-  _searchTransactions() {
+  Future<List<EntradaOverview>>_searchTransactions() async {
     if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
       _formKey.currentState.save();
-      print("fetch all transaction in date range");
 
-      //create get request with fecha range + entrada/salida
-      //show entradas/salidas
+      var client = http.Client();
+      var url = 'https://wakerakka.herokuapp.com/';
+      var endpoint = 'transactions/in/';
+
+      try {
+        String request;
+
+        if (this.tipo == 1) request = ('$url$endpoint' + 'in');
+        if (this.tipo == 2) request = ('$url$endpoint' + 'out');
+
+        List<EntradaOverview> transac = [];
+
+        String requestUrl = request + '?in_date=${this.fecha_una}&out_date=${this.fecha_dos}';
+        var uriResponse = await client.get(url + endpoint);
+        //print(uriResponse.body);
+
+        if (uriResponse.statusCode == 200) {
+          List<dynamic> body = jsonDecode(uriResponse.body);
+
+          for (int i = 0; i < body.length; i++) {
+            if (tipo == 1) en_trans.add(EntradaOverview.fromJson(body[i]));
+            //if (tipo == 2) sal_trans.add(SalidaOverview.fromJson(body[i]));
+            else throw Exception('Wrong transaction type');
+          }
+          return transac;
+        } else {
+          throw Exception('Cannot receive response from server');
+        }
+      } finally {
+        client.close();
+      }
     }
   }
 

@@ -65,7 +65,7 @@ class _EntradaState extends State<Entrada> {
             child: Stack(children: [
               Align(
                   alignment: Alignment(-0.8, -0.5),
-                  child: Text('Usuario', //${entradas[index].usario}
+                  child: Text('${entradas[index].usario}', //${entradas[index].usario}
                         style: TextStyle(
                             color: Color(0xff073B3A),
                             fontWeight: FontWeight.bold,
@@ -74,7 +74,7 @@ class _EntradaState extends State<Entrada> {
               ),
               Align(
                   alignment: Alignment(-0.8, 0.5),
-                  child: Text('Providor ID', //${entradas[index].provider_id}
+                  child: Text('Cedula', //${entradas[index].provider_id}
                       style: TextStyle(
                           color: Color(0xff073B3A),
                           fontStyle: FontStyle.italic,

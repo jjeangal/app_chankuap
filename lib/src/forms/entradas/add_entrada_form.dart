@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:app_chankuap/src/Widgets/CustomAlertDialog.dart';
 
 import '../product_list_form.dart';
 
@@ -57,6 +58,7 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
           top: false,
           bottom: false,
           child: new Form(
+
               key: _formKey,
               child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -64,13 +66,13 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                     SizedBox(height: 10),
                     Container(
                       child: Text(
-                        "Entrada De Mercaderia - Ficha n°" +
+                        "Entrada De Mercaderia \n Ficha n°" +
                           "2(fixo)", //request numero latest ficha
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: Color(0xff073B3A)),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 15),
                     InputDatePickerFormField(
                         onDateSaved: (value) => {
                           _fechaUno = DateFormat(
@@ -105,12 +107,14 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                         ].map((quien) => DropdownMenuItem(
                                 value: quien,
                                 child: Text("$quien",
-                                    textAlign: TextAlign.center)))
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Color(0xff073B3A)))))
                             .toList()),
                     SizedBox(height: 10),
                     TextFormField(
+                      style: TextStyle(color: Color(0xff073B3A)),
                       decoration: const InputDecoration(
-                        labelText: 'Nombre del Productor',
+                        labelText: 'Nombre del Productor'
                       ),
                       inputFormatters: [LengthLimitingTextInputFormatter(30)],
                       onSaved: (name) {
@@ -132,6 +136,7 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                     ),
                     SizedBox(height: 10),
                     TextFormField(
+                      style: TextStyle(color: Color(0xff073B3A)),
                       decoration: const InputDecoration(
                         labelText: 'Codigo de Producto',
                       ),
@@ -156,6 +161,7 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                     SizedBox(height: 10),
                     TextFormField(
                       decoration: const InputDecoration(
+                        fillColor: Color(0xff073B3A),
                         labelText: 'Cedula',
                       ),
                       inputFormatters: [LengthLimitingTextInputFormatter(30)],
@@ -190,7 +196,9 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                         ].map((comu) => DropdownMenuItem(
                             value: comu,
                             child: Text("$comu",
-                                textAlign: TextAlign.left)
+                                textAlign: TextAlign.left,
+                                style: TextStyle(color: Color(0xff073B3A)),
+                            )
                         )).toList()),
                     SizedBox(height: 10),
                     FormBuilderDropdown(
@@ -204,7 +212,9 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                             .map((medio) => DropdownMenuItem(
                                 value: medio,
                                 child: Text("$medio",
-                                    textAlign: TextAlign.center)))
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Color(0xff073B3A)),
+                                )))
                             .toList()),
                     SizedBox(height: 20),
                     Row(
@@ -220,11 +230,14 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
                           child: IconButton(
                               iconSize: 20,
                               icon: Icon(Icons.add),
-                              onPressed: () => Navigator.push(
+                              onPressed: () => setState(() {
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => stepperPage),
-                                  )),
+                                );
+                              }),
+                          )
                         )
                       ],
                     ),
@@ -237,17 +250,22 @@ class _AddEntradaFormState extends State<AddEntradaForm> {
         ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          confirmationDialog(context, "Estas seguro ?",
-              title: "Confirmacion",
-              confirmationText: "Click here to confirmar",
-              positiveText: "Registrar", positiveAction: () {
-                //empty values
-                //push entrada
-                _validateInputs();
-          });
+          var dialog = CustomAlertDialog(
+            title: "Registrar la transacción",
+            message: "Estas seguro?",
+            onPostivePressed: () {
+              //
+            },
+            positiveBtnText: 'Si',
+            negativeBtnText: 'No',
+          );
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => dialog
+          );
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xff073B3A),
       ),
     );
   }

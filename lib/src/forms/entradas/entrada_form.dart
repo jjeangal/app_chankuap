@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app_chankuap/src/Widgets/selectMaterial.dart';
 import 'package:app_chankuap/src/app_bars/form_app_bar.dart';
 import 'package:app_chankuap/src/Widgets/data_object.dart';
@@ -42,7 +44,7 @@ class _EntradaFormState extends State<EntradaForm> {
   final stepperPage = StepperPage();
   final productList = ProductListForm();
 
-  final List<Producto> productos = [];
+  List<Producto> productos = [];
 
   @override
   void initState() {
@@ -136,7 +138,7 @@ class _EntradaFormState extends State<EntradaForm> {
                     SizedBox(height: 10),
                     TextFormField(
                       decoration: const InputDecoration(
-                        labelText: 'Codigo de Producto',
+                        labelText: 'Codigo de Productor',
                       ),
                       inputFormatters: [LengthLimitingTextInputFormatter(30)],
                       onSaved: (value) {
@@ -219,12 +221,12 @@ class _EntradaFormState extends State<EntradaForm> {
                           child: IconButton(
                               iconSize: 20,
                               icon: Icon(Icons.add),
-                              onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => stepperPage),
-                                  )),
-                        )
+                              onPressed: () {
+                                Route route = MaterialPageRoute(
+                                    builder: (context) => stepperPage);
+                                Navigator.push(context, route).then(onGoBack);
+                              },
+                        ))
                       ],
                     ),
                     Container(
@@ -244,9 +246,17 @@ class _EntradaFormState extends State<EntradaForm> {
           });
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xff073B3A),
       ),
     );
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    print(stepperPage.productos.length);
+    setState((){
+      productList.productos = stepperPage.productos;
+      print("when");
+    });
   }
 
   void _validateInputs() {

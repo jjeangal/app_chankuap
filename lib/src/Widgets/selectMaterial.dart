@@ -2,6 +2,7 @@ import 'package:cupertino_stepper/cupertino_stepper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../data_lists/Products.dart';
 import '../Widgets/data_object.dart';
 
 import 'package:flutter/services.dart';
@@ -47,8 +48,8 @@ class _StepperPageState extends State<StepperPage> {
         height: MediaQuery.of(context).size.height,
         child: CupertinoPageScaffold(
           navigationBar: CupertinoNavigationBar(
-            middle: Text('Anadir Materia Prima'),
-
+            actionsForegroundColor: Color(0xff073B3A),
+            middle: Text('Anadir Materia Prima', style: TextStyle(color: Color(0xff073B3A))),
           ),
           child: SafeArea(
             child: OrientationBuilder(
@@ -74,6 +75,7 @@ class _StepperPageState extends State<StepperPage> {
         type: type,
         steps: _buildSteps(),
         currentStep: currentStep,
+
         onStepTapped: (step) => setState(() => currentStep = step),
         onStepCancel: canCancel ? () => setState(() => --currentStep) : null,
         onStepContinue: () {
@@ -97,7 +99,7 @@ class _StepperPageState extends State<StepperPage> {
                     onSaved: (value) => name = value,
                     validator: (val) {
                       if(val.isEmpty) return 'El nombre de Producto no '
-                          'esta bueno';
+                          'es bueno';
                       return null;
                     },
                     textFieldConfiguration: TextFieldConfiguration(
@@ -108,9 +110,8 @@ class _StepperPageState extends State<StepperPage> {
                     ),
                     // ignore: missing_return
                     suggestionsCallback: (pattern) async {
-                      //return await BackendService.getSuggestions(pattern);
+                      return await Products.getSuggestions(pattern);
                     },
-
                     itemBuilder: (context, suggestion) {
                       return ListTile(
                         title: Text(suggestion),
@@ -218,8 +219,9 @@ class _StepperPageState extends State<StepperPage> {
   _buildSteps(){
     return <Step> [
       Step(
-        title: Text("Producto"),
+        title: Text("Producto", style: TextStyle(color: Color(0xff073B3A))),
         subtitle: Text('Selecionar nombre y codigo'),
+
         content: LimitedBox(
             maxWidth: 300, maxHeight: 500, child: _buildStep())),
     ];
@@ -234,7 +236,9 @@ class _StepperPageState extends State<StepperPage> {
         var price = int.parse(precio);
         widget.productos.add(new Producto(1, name, cantidad, unidad,
             price, organico, comunidad));
-        Navigator.pop(context);
+        setState(() {
+          Navigator.pop(context);
+        });
       } on FormatException {
         print('Format error!');
       }

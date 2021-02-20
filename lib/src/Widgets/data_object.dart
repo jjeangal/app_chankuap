@@ -103,7 +103,6 @@ class Producto {
   };
 
  dynamic toJsonList(List<Producto> listToParse){
-
     ListProducts = [];
 
     for(Producto product in listToParse){
@@ -141,7 +140,7 @@ class EntradaOverview {
   final int usario;
   final int provider_id;
 
-  List<Map<String, dynamic>> ListSalidas;
+  List<Map<String, dynamic>> ListEntradas;
 
   EntradaOverview.fromJson(Map<String, dynamic> json) :
     trans_id = json['TRANS_ID'],
@@ -157,14 +156,11 @@ class EntradaOverview {
   };
 
   dynamic toJsonList(List<EntradaOverview> listToParse){
-
-    ListSalidas = [];
-
-    for(EntradaOverview salida in listToParse){
-      ListSalidas.add(salida.toJson());
+    ListEntradas = [];
+    for(EntradaOverview entrada in listToParse){
+      ListEntradas.add(entrada.toJson());
     }
-    print(ListSalidas);
-    return ListSalidas;
+    return ListEntradas;
 
   }
 
@@ -214,7 +210,6 @@ class SalidaOverview {
   }
 
   dynamic toJsonList(List<SalidaOverview> listToParse){
-
     ListSalidas = [];
 
     for(SalidaOverview salida in listToParse){
@@ -227,6 +222,7 @@ class SalidaOverview {
   SalidaOverview(this.trans_id, this.username, this.cliente, this.fecha);
 }
 
+
 class SendEntrada {
   final String fecha;
   final String name;
@@ -235,22 +231,3 @@ class SendEntrada {
 
   SendEntrada(this.fecha, this.name, this.ID, this.productos);
 }
-
-Map myMap = {
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-  {'name': '', 'code': ''},
-} as Map;

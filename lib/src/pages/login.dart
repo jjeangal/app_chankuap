@@ -240,6 +240,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   checkPassword() async {
+    Route route = MaterialPageRoute(builder: (context) => MyHomePage());
+    Navigator.pushReplacement(context, route);
     var client = http.Client();
     var url = 'https://wakerakka.herokuapp.com/';
     var endpoint = 'authenticate/';

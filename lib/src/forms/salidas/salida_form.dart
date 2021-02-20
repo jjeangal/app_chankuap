@@ -172,7 +172,7 @@ class _SalidaFormState extends State<SalidaForm> {
               });
         },
         child: Icon(Icons.add),
-        backgroundColor: Color(0xff9F4A54),
+        backgroundColor: Color(0xff073B3A),
       ),
     );
   }
@@ -186,27 +186,5 @@ class _SalidaFormState extends State<SalidaForm> {
   }
 }
 
-/**
-    TypeAheadField(
-    textFieldConfiguration: TextFieldConfiguration(
-    autofocus: true,
-    decoration: const InputDecoration(
-    labelText: 'Product name',
-    hintText: 'Enter product name',
-    ),
-    ),
-    // ignore: missing_return
-    suggestionsCallback: (pattern) async {
-    //return await BackendService.getSuggestions(pattern);
-    },
-    itemBuilder: (context, suggestion) {
-    return ListTile(
-    title: Text(suggestion),
-    );
-    },
-    onSuggestionSelected: (suggestion) {
-    this._typeAheadController.text = suggestion;
-    },
-    ),**/
 
 
