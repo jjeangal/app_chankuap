@@ -48,7 +48,7 @@ class _EntradaFormState extends State<EntradaForm> {
 
   @override
   void initState() {
-    print(widget.trans.fecha);
+    print(widget.trans.date);
     stepperPage.productos = productos;
     productList.productos = productos;
     super.initState();
@@ -82,7 +82,7 @@ class _EntradaFormState extends State<EntradaForm> {
                       onDateSaved: (value) => {
                         _fechaUno = value.toString()
                       },
-                      initialDate: DateTime.parse(widget.trans.fecha),
+                      initialDate: DateTime.parse(widget.trans.date),
                       firstDate: DateTime(2020, 1, 1),
                       lastDate:  DateTime(2060, 1, 01)
                     ),

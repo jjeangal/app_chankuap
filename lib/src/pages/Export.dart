@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app_chankuap/src/Widgets/data_object.dart';
+import 'package:app_chankuap/src/Widgets/TransactionType.dart';
 import 'package:app_chankuap/src/app_bars/export_app_bar.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,8 +12,7 @@ import 'package:http/http.dart' as http;
 
 import '../forms/entradas/entrada_form.dart';
 
-List<EntradaOverview> en_trans = [];
-List<SalidaOverview> sal_trans = [];
+List<TransactionType> trans = [];
 
 class Export extends StatefulWidget {
   Export({Key key}) : super(key: key);
@@ -129,13 +129,20 @@ class _ExportState extends State<Export> {
                             Expanded(
                               flex: 1,
                               child: Container(
-                                  child: IconButton(
-                                    icon: Icon(Icons.search),
-                                    iconSize: 24,
-                                    onPressed: () => _searchTransactions().then((value) => en_trans = value)
-                                  )
+                                child: IconButton(
+                                  icon: Icon(Icons.search),
+                                  iconSize: 24,
+                                  onPressed: () {
+                                    _searchTransactions().then((value) => {
+                                      setState(() {
+                                        trans = value;
+                                        trans.sort((a, b) => (b.trans_id).compareTo(a.trans_id));
+                                      })
+                                    });
+                                  }
+                                )
                               )
-                            ),
+                            )
                           ]
                         )
                       )
@@ -147,7 +154,7 @@ class _ExportState extends State<Export> {
                 height: screenHeight(context) * 0.68,
                 width: screenSize(context).width,
                 child: ListView.builder(
-                    itemCount: en_trans.length,
+                    itemCount: trans.length,
                     scrollDirection: Axis.vertical,
                     padding: EdgeInsets.all(5.0),
                     itemBuilder: (context, index) =>
@@ -239,7 +246,7 @@ class _ExportState extends State<Export> {
             child: Stack(children: [
               Align(
                   alignment: Alignment(-0.8, -0.5),
-                  child: Text('${en_trans[index].usario}',
+                  child: Text('${trans[index].username}',
                       style: TextStyle(
                           color: Color(0xff073B3A),
                           fontWeight: FontWeight.bold,
@@ -255,7 +262,7 @@ class _ExportState extends State<Export> {
                   alignment: Alignment(0.5, -0.5),
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2.8,
-                    child: Text('10/11/2000',
+                    child: Text('${trans[index].date}',
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         color: Color(0xff073B3A),
@@ -266,7 +273,7 @@ class _ExportState extends State<Export> {
                 alignment: Alignment(0.5, 0.5),
                 child: Container(
                   width: MediaQuery.of(context).size.width / 2.8,
-                  child: Text("ID",
+                  child: Text("${trans[index].trans_id}",
                       textAlign: TextAlign.right,
                       style: TextStyle(
                           color: Color(0xff073B3A),
@@ -295,34 +302,34 @@ class _ExportState extends State<Export> {
         });
   }
 
-  Future<List<EntradaOverview>>_searchTransactions() async {
+  Future<List<TransactionType>>_searchTransactions() async {
     if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
       _formKey.currentState.save();
 
       var client = http.Client();
       var url = 'https://wakerakka.herokuapp.com/';
-      var endpoint = 'transactions/in/';
+      var endpoint = 'transactions/';
 
       try {
         String request;
 
-        if (this.tipo == 1) request = ('$url$endpoint' + 'in');
-        if (this.tipo == 2) request = ('$url$endpoint' + 'out');
+        if (this.tipo == 1) request = ('$url$endpoint' + 'in/');
+        if (this.tipo == 2) request = ('$url$endpoint' + 'out/');
 
-        List<EntradaOverview> transac = [];
+        List<TransactionType> transac = [];
 
         String requestUrl = request + '?in_date=${this.fecha_una}&out_date=${this.fecha_dos}';
-        var uriResponse = await client.get(url + endpoint);
-        //print(uriResponse.body);
+        print(requestUrl);
+        var uriResponse = await client.get(requestUrl);
 
         if (uriResponse.statusCode == 200) {
           List<dynamic> body = jsonDecode(uriResponse.body);
+          print(body.toString());
 
           for (int i = 0; i < body.length; i++) {
-            if (tipo == 1) en_trans.add(EntradaOverview.fromJson(body[i]));
-            //if (tipo == 2) sal_trans.add(SalidaOverview.fromJson(body[i]));
-            else throw Exception('Wrong transaction type');
+            if (tipo == 1) transac.add(EntradaOverview.fromJson(body[i]));
+            if (tipo == 2) transac.add(SalidaOverview.fromJson(body[i]));
           }
           return transac;
         } else {

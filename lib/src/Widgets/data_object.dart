@@ -1,6 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:intl/intl.dart';
 
+import 'package:app_chankuap/src/Widgets/TransactionType.dart';
+
 @JsonSerializable()
 class EntradaTrans {
   final String fecha_uno;
@@ -133,25 +135,25 @@ class ListEntradaOverviews {
 }
 
 @JsonSerializable()
-class EntradaOverview {
+class EntradaOverview extends TransactionType {
 
   final int trans_id;
-  final String fecha;
-  final int usario;
+  final String date;
+  final int username;
   final int provider_id;
 
   List<Map<String, dynamic>> ListEntradas;
 
   EntradaOverview.fromJson(Map<String, dynamic> json) :
     trans_id = json['TRANS_ID'],
-    fecha = json['date'],
-    usario = json['username'],
+    date = json['date'],
+    username = json['username'],
     provider_id = json['PROVIDER_ID'];
 
   Map<String, dynamic> toJson() => {
     "TRANS_ID": trans_id,
-    "date": fecha,
-    "username": usario,
+    "date": date,
+    "username": username,
     "PROVIDER_ID": provider_id
   };
 
@@ -164,7 +166,7 @@ class EntradaOverview {
 
   }
 
-  EntradaOverview(this.trans_id, this.fecha, this.usario, this.provider_id);
+  EntradaOverview(this.trans_id, this.date, this.username, this.provider_id);
 }
 
 
@@ -183,24 +185,24 @@ class ListSalidaOverviews {
   ListSalidaOverviews(this.ListSalidas);
 }
 
-class SalidaOverview {
+class SalidaOverview extends TransactionType {
 
   final int trans_id;
   final int username;
   final String cliente;
-  final String fecha;
+  final String date;
 
   List<Map<String, dynamic>> ListSalidas;
 
   SalidaOverview.fromJson(Map<String, dynamic> json) :
         trans_id = json['TRANS_OUT_ID'],
-        fecha = json['date'],
+        date = json['date'],
         username = json['username'],
         cliente = json['cliente'];
 
   Map<String, dynamic> toJson() => {
     "TRANS_OUT_ID": trans_id,
-    "date": fecha,
+    "date": date,
     "username": username,
     "PROVIDER_ID": cliente
   };
@@ -215,11 +217,10 @@ class SalidaOverview {
     for(SalidaOverview salida in listToParse){
       ListSalidas.add(salida.toJson());
     }
-    print(ListSalidas);
     return ListSalidas;
   }
 
-  SalidaOverview(this.trans_id, this.username, this.cliente, this.fecha);
+  SalidaOverview(this.trans_id, this.username, this.cliente, this.date);
 }
 
 

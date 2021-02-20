@@ -65,7 +65,7 @@ class _EntradaState extends State<Entrada> {
             child: Stack(children: [
               Align(
                   alignment: Alignment(-0.8, -0.5),
-                  child: Text('${entradas[index].usario}', //${entradas[index].usario}
+                  child: Text('${entradas[index].username}', //${entradas[index].usario}
                         style: TextStyle(
                             color: Color(0xff073B3A),
                             fontWeight: FontWeight.bold,
@@ -81,7 +81,7 @@ class _EntradaState extends State<Entrada> {
                           fontSize: 16))),
               Align(
                   alignment: Alignment(0.35, 0),
-                  child: Text('${entradas[index].fecha}',
+                  child: Text('${entradas[index].date}',
                       style: TextStyle(
                         color: Color(0xff073B3A),
                         fontWeight: FontWeight.bold,

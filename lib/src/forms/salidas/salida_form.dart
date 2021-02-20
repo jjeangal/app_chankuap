@@ -68,7 +68,7 @@ class _SalidaFormState extends State<SalidaForm> {
               ),
               SizedBox(height: 10),
               InputDatePickerFormField(
-                initialDate: DateTime.parse(widget.trans.fecha),
+                initialDate: DateTime.parse(widget.trans.date),
                   onDateSaved: (value) => {
                     _fechaUno = value.toString()
                   },

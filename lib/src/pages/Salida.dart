@@ -73,7 +73,7 @@ class _Salida extends State<Salida> {
             ),
             Align(
               alignment: Alignment(0.35, 0),
-              child: Text('${salidas[index].fecha}',
+              child: Text('${salidas[index].date}',
                   style: TextStyle(
                     color: Color(0xff073B3A),
                     fontWeight: FontWeight.bold,
@@ -114,9 +114,6 @@ class _Salida extends State<Salida> {
           await _getSalida(salidas[index].getId()).then((result) {
             setState(() {
               this.trans = result;
-              print(trans.fecha);
-              print(trans.cliente);
-              print(trans.trans_id);
             });
           });
           Navigator.push(
