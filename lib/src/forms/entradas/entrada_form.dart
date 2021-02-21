@@ -14,7 +14,8 @@ import '../product_list_form.dart';
 
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 
-class EntradaForm extends StatefulWidget{
+class EntradaForm extends StatefulWidget {
+
   final int id;
   final EntradaOverview trans;
 

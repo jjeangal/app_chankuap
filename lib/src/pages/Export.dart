@@ -10,7 +10,9 @@ import 'package:intl/intl.dart';
 
 import 'package:http/http.dart' as http;
 
+
 import '../forms/entradas/entrada_form.dart';
+import '../forms/salidas/salida_form.dart';
 
 List<TransactionType> trans = [];
 
@@ -24,7 +26,6 @@ class _ExportState extends State<Export> {
   String _title = "Export";
 
   final _formKey = GlobalKey<FormState>();
-  final EntradaForm entrada_form = EntradaForm();
 
   String fecha_una;
   String fecha_dos;
@@ -296,8 +297,10 @@ class _ExportState extends State<Export> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => new EntradaForm(trans:
-                new EntradaOverview(1, "2022-11-11", 2, 2))),
+                builder: (context) {
+                  if (tipo == 1) return new EntradaForm(trans: trans[index]);
+                  if (tipo == 2) return new SalidaForm(trans: trans[index]);
+                }),
           );
         });
   }
